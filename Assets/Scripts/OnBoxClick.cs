@@ -6,7 +6,7 @@ using TMPro;
 
 public class OnBoxClick : MonoBehaviour
 {
-    public MovementSystem moveSystem;
+    public CommonMovement comMov;
 
     private EventTrigger eventTrigger;
 
@@ -26,6 +26,6 @@ public class OnBoxClick : MonoBehaviour
     {
         GameObject clickedObj = eventTrigger.gameObject;
         //Debug.Log(clickedObj);
-        moveSystem.ChangeBox(clickedObj);
+        comMov.ChangeBox(clickedObj);
     }
 }
