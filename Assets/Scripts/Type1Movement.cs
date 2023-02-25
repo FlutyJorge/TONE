@@ -9,17 +9,9 @@ public class Type1Movement : MonoBehaviour
     private int[] dirs;
 
     //初期の移動タイプを設定
-    private void Start()
+    private void Awake()
     {
         ChangeType1();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown("1"))
-        {
-            ChangeType1();
-        }
     }
 
     //移動可能Boxのインデックスを取得
@@ -79,9 +71,14 @@ public class Type1Movement : MonoBehaviour
         comMov.boxes[idx2] = currentBox;
     }
 
-    private void ChangeType1()
+    public void ChangeType1()
     {
+        Debug.Log("Type1");
         comMov.getTargetIndex = GetTargetIndex;
         comMov.change = Type1Change;
+
+        comMov.puzzleType1 = true;
+        comMov.puzzleType2 = false;
+        comMov.puzzleType3 = false;
     }
 }

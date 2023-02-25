@@ -8,14 +8,6 @@ public class Type2Movment : MonoBehaviour
 
     private int dir;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown("2"))
-        {
-            ChangeType2();
-        }
-    }
-
     //移動可能Boxのインデックスを取得
     private int GetTargetIndex(GameObject clickedObj)
     {
@@ -42,7 +34,6 @@ public class Type2Movment : MonoBehaviour
                 if (nidx == r * comMov.puzzleSize + c)
                 {
                     ret = nidx;
-                    Debug.Log(ret);
                     return ret;
                 }
             }
@@ -71,9 +62,19 @@ public class Type2Movment : MonoBehaviour
         comMov.boxes[idx1 - comMov.puzzleSize] = tmpBox3;
     }
 
-    private void ChangeType2()
+    public void ChangeType2()
     {
+        Debug.Log("Type2");
         comMov.getTargetIndex = GetTargetIndex;
         comMov.change = Type2Change;
+
+        comMov.puzzleType1 = false;
+        comMov.puzzleType2 = true;
+        comMov.puzzleType3 = false;
+
+        foreach (GameObject box in comMov.boxes)
+        {
+            box.transform.localScale = new Vector2(1.5f, 1.5f);
+        }
     }
 }

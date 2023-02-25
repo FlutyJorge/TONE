@@ -16,7 +16,7 @@ public class CommonMovement : MonoBehaviour
     public int puzzleSize;     //Box‚ğ•À‚×‚½‚Æ‚«‚Ìc‰¡‚Ì”
     [SerializeField] int suffleCount;
     [SerializeField] bool isClear = false;
-    [SerializeField] bool puzzleType1, puzzleType2;
+    public bool puzzleType1, puzzleType2, puzzleType3;
 
     private void Start()
     {
