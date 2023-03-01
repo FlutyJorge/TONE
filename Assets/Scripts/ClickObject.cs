@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class ClickAndDrag : MonoBehaviour
+public class ClickObject : MonoBehaviour
 {
     public CommonMovement comMov;
+    public SoundManager sManager;
 
     private EventTrigger eventTrigger;
 
@@ -22,10 +23,24 @@ public class ClickAndDrag : MonoBehaviour
 
     }
     
-    private void OnClick()
+    public void OnBoxClick()
     {
         GameObject clickedObj = eventTrigger.gameObject;
-        //Debug.Log(clickedObj);
         comMov.ChangeBox(clickedObj);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "SoundArea")
+        {
+            Debug.Log("a");
+        }
+    }
+
+    public void OnSoundButtonClick()
+    {
+        GameObject clickedObj = eventTrigger.gameObject;
+        sManager.PlaySound(clickedObj);
+
     }
 }
