@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Type2Movment : MonoBehaviour
 {
     public CommonMovement comMov;
+    //[SerializeField] GameObject parent;
 
-    private int dir;
 
     //移動可能Boxのインデックスを取得
     private int GetTargetIndex(GameObject clickedObj)
@@ -23,19 +24,24 @@ public class Type2Movment : MonoBehaviour
             return ret;
         }
 
-        dir = -1; //時計回り
-        int nidx = idx + dir;
+        int nidx = idx -1;
 
         //nidxが回転できる配列か確認する
-        for (int r = 1; r < comMov.puzzleSize; ++r)
+        int r = idx / comMov.puzzleSize;
+        int c = idx % comMov.puzzleSize;
+
+        if (r == 0 || c == 0)
         {
-            for (int c = 0; c < comMov.puzzleSize - 1; ++c)
+            Debug.Log("端は回転できん！");
+            return ret;
+        }
+
+        for (int i = 0; i < comMov.boxes.Length; ++i)
+        {
+            if (nidx == i)
             {
-                if (nidx == r * comMov.puzzleSize + c)
-                {
-                    ret = nidx;
-                    return ret;
-                }
+                ret = nidx;
+                return ret;
             }
         }
         Debug.Log("回転できん！");
@@ -45,11 +51,20 @@ public class Type2Movment : MonoBehaviour
     private void Type2Change(int idx1, int idx2, GameObject clickedObj)
     {
         //位置変更
-        Vector2 tmpPos = clickedObj.transform.position;
-        clickedObj.transform.position = comMov.boxes[idx2].transform.position;
-        comMov.boxes[idx2].transform.position = comMov.boxes[idx2 - comMov.puzzleSize].transform.position;
-        comMov.boxes[idx2 - comMov.puzzleSize].transform.position = comMov.boxes[idx1 - comMov.puzzleSize].transform.position;
-        comMov.boxes[idx1 - comMov.puzzleSize].transform.position = tmpPos;
+        Vector3 tmpPos = clickedObj.transform.position;
+        Vector3 parentPos = (tmpPos + comMov.boxes[idx2 - comMov.puzzleSize].transform.position) / 2;
+
+        comMov.parent.transform.position = parentPos;
+        clickedObj.transform.SetParent(comMov.parent.transform);
+        comMov.boxes[idx2].transform.SetParent(comMov.parent.transform);
+        comMov.boxes[idx2 - comMov.puzzleSize].transform.SetParent(comMov.parent.transform);
+        comMov.boxes[idx1 - comMov.puzzleSize].transform.SetParent(comMov.parent.transform);
+        comMov.parent.transform.DORotate(new Vector3(0, 0, -90), 1f).SetRelative();
+        foreach (Transform children in comMov.parent.transform)
+        {
+            children.transform.DOLocalRotate(new Vector3(0, 0, 90), 1f).SetRelative();
+        }
+        //StartCoroutine(DetachChildren(parent));
 
         //配列のデータを更新
         GameObject tmpBox1 = comMov.boxes[idx1];
@@ -62,7 +77,14 @@ public class Type2Movment : MonoBehaviour
         comMov.boxes[idx1 - comMov.puzzleSize] = tmpBox3;
     }
 
-    public void ChangeType2()
+    /*private IEnumerator DetachChildren(GameObject parent)
+    {
+        yield return new WaitForSeconds(1f);
+        parent.transform.DetachChildren();
+        yield break;
+    }*/
+
+    public void ChangeToType2()
     {
         Debug.Log("Type2");
         comMov.getTargetIndex = GetTargetIndex;

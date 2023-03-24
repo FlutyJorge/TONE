@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Type1Movement : MonoBehaviour
 {
     public CommonMovement comMov;
+    [SerializeField] GameObject parent;
 
     private int[] dirs;
 
     //初期の移動タイプを設定
     private void Awake()
     {
-        ChangeType1();
+        ChangeToType1();
     }
 
     //移動可能Boxのインデックスを取得
@@ -61,9 +63,18 @@ public class Type1Movement : MonoBehaviour
     private void Type1Change(int idx1, int idx2, GameObject clickedObj)
     {
         //位置変更
-        Vector2 tmpPos = clickedObj.transform.position;
-        clickedObj.transform.position = comMov.boxes[idx2].transform.position;
-        comMov.boxes[idx2].transform.position = tmpPos;
+        Vector3 tmpPos = clickedObj.transform.position;
+        Vector3 parentPos = (tmpPos + comMov.boxes[idx2].transform.position) / 2;
+        /*clickedObj.transform.DOMove(comMov.boxes[idx2].transform.position, 1f);
+        comMov.boxes[idx2].transform.DOMove(tmpPos, 1);*/
+        comMov.parent.transform.position = parentPos;
+        clickedObj.transform.SetParent(comMov.parent.transform);
+        comMov.boxes[idx2].transform.SetParent(comMov.parent.transform);
+        comMov.parent.transform.DORotate(new Vector3(0, 0, -180), 1f).SetRelative();
+        foreach (Transform children in comMov.parent.transform)
+        {
+            children.transform.DOLocalRotate(new Vector3(0, 0, 180), 1f).SetRelative();
+        }
 
         //配列のデータを更新
         GameObject currentBox = comMov.boxes[idx1];
@@ -71,7 +82,7 @@ public class Type1Movement : MonoBehaviour
         comMov.boxes[idx2] = currentBox;
     }
 
-    public void ChangeType1()
+    public void ChangeToType1()
     {
         Debug.Log("Type1");
         comMov.getTargetIndex = GetTargetIndex;
@@ -80,5 +91,10 @@ public class Type1Movement : MonoBehaviour
         comMov.puzzleType1 = true;
         comMov.puzzleType2 = false;
         comMov.puzzleType3 = false;
+
+        foreach (GameObject box in comMov.boxes)
+        {
+            box.transform.localScale = new Vector2(1.5f, 1.5f);
+        }
     }
 }

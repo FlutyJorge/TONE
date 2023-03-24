@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TMPro;
+using DG.Tweening;
 
 public class ClickObject : MonoBehaviour
 {
     public CommonMovement comMov;
     public SoundManager sManager;
+    public Camera cam;
+    public bool clicked = false;
 
     private EventTrigger eventTrigger;
 
@@ -29,18 +31,16 @@ public class ClickObject : MonoBehaviour
         comMov.ChangeBox(clickedObj);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "SoundArea")
-        {
-            Debug.Log("a");
-        }
-    }
-
     public void OnSoundButtonClick()
     {
         GameObject clickedObj = eventTrigger.gameObject;
         sManager.PlaySound(clickedObj);
+    }
 
+    public void MoveUp()
+    {
+        //clicked = true;
+        Debug.Log("ê¨å˜");
+        cam.transform.DOMove(new Vector3(0, 10, -10), 1.5f).SetEase(Ease.InOutBack);
     }
 }

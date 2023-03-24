@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7b75c37b5ddf233479cb3ac92fc96815
+guid: d50216750875d3443a41475c7f1502ac
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -139,49 +139,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: NeumorphismButton2_0
-      rect:
-        serializedVersion: 2
-        x: 40
-        y: 51
-        width: 158
-        height: 158
-      alignment: 9
-      pivot: {x: 0.5431472, y: 0.4892132}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4e49b6425b29ef44397ca84028c054b6
-      internalID: 302040868
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: NeumorphismButton2_1
-      rect:
-        serializedVersion: 2
-        x: 252
-        y: 39
-        width: 158
-        height: 158
-      alignment: 9
-      pivot: {x: 0.47483093, y: 0.54134935}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 76b4c9cc4fefe5b46b30bcdb7b53f634
-      internalID: 632992390
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -192,9 +150,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      NeumorphismButton2_1: 632992390
-      NeumorphismButton2_0: 302040868
+    nameFileIdTable: {}
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

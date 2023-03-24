@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class CommonMovement : MonoBehaviour
 {
     public GameObject[] boxes;
+    public GameObject parent;
 
     //このスクリプトからType系へのへの参照を避ける
     public delegate int Delegate1(GameObject clickedObj);
@@ -13,14 +14,14 @@ public class CommonMovement : MonoBehaviour
     public delegate void Delegate2(int idx1, int idx2, GameObject clickedObj);
     public Delegate2 change;
 
-    public int puzzleSize;     //Boxを並べたときの縦横の数
+    public int puzzleSize; //Boxを並べたときの縦横の数
     [SerializeField] int suffleCount;
     [SerializeField] bool isClear = false;
     public bool puzzleType1, puzzleType2, puzzleType3;
 
     private void Start()
     {
-        Suffle(getTargetIndex);
+        //Suffle(getTargetIndex);
     }
 
     void Update()
@@ -61,6 +62,15 @@ public class CommonMovement : MonoBehaviour
         }
 
         change(idx1, idx2, clickedObj);
+        StartCoroutine(DetachChildren(parent));
+    }
+
+    //スワップ終了時に親子関係解除
+    public IEnumerator DetachChildren(GameObject parent)
+    {
+        yield return new WaitForSeconds(1f);
+        parent.transform.DetachChildren();
+        yield break;
     }
 
     //シャッフル(本番は不要)
@@ -107,6 +117,7 @@ public class CommonMovement : MonoBehaviour
             if (boxes[i].name != i.ToString())
             {
                 canclear = false;
+                break;
             }
         }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Type3Movement : MonoBehaviour
 {
@@ -73,6 +74,7 @@ public class Type3Movement : MonoBehaviour
             else
             {
                 canType3Swap = false;
+                DeactivateAllBoxes();
             }
         }
     }
@@ -139,22 +141,19 @@ public class Type3Movement : MonoBehaviour
             }
         }
 
-        //縦横チェック
-        for (int i = 0; i < selectedBoxes.Count; ++i)
+        if (selectedBoxes[3] != comMov.boxes[idx + 3])
         {
-            if (selectedBoxes[i] != comMov.boxes[i + idx])
-            {
-                rowRet = false;
-            }
-            else if (selectedBoxes[i] != comMov.boxes[idx + i * comMov.puzzleSize])
-            {
-                columnRet = false;
-            }
+            rowRet = false;
+        }
 
-            if (!rowRet && !columnRet)
-            {
-                ret = false;
-            }
+        if (selectedBoxes[0] != comMov.boxes[12] && selectedBoxes[1] != comMov.boxes[idx + comMov.puzzleSize])
+        {
+            columnRet = false;
+        }
+
+        if (!rowRet && !columnRet)
+        {
+            ret = false;
         }
         return ret;
     }
@@ -260,9 +259,18 @@ public class Type3Movement : MonoBehaviour
     private void Type3Change(int idx1, int idx2, GameObject clickedObj)
     {
         //位置変更
-        Vector2 tmpPos = clickedObj.transform.position;
-        clickedObj.transform.position = comMov.boxes[idx2].transform.position;
-        comMov.boxes[idx2].transform.position = tmpPos;
+        Vector3 tmpPos = clickedObj.transform.position;
+        Vector3 parentPos = (tmpPos + comMov.boxes[idx2].transform.position) / 2;
+        /*clickedObj.transform.position = comMov.boxes[idx2].transform.position;
+        comMov.boxes[idx2].transform.position = tmpPos;*/
+        comMov.parent.transform.position = parentPos;
+        clickedObj.transform.SetParent(comMov.parent.transform);
+        comMov.boxes[idx2].transform.SetParent(comMov.parent.transform);
+        comMov.parent.transform.DORotate(new Vector3(0, 0, -180), 1f).SetRelative();
+        foreach (Transform children in comMov.parent.transform)
+        {
+            children.transform.DOLocalRotate(new Vector3(0, 0, 180), 1f).SetRelative();
+        }
 
         //配列のデータを更新
         GameObject currentBox = comMov.boxes[idx1];
