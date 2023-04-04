@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7083505842774908957}
-  - component: {fileID: 7083505842774908956}
-  - component: {fileID: 7083505842774908959}
-  - component: {fileID: 7083505842774908958}
+  - component: {fileID: 7921888131457693645}
+  - component: {fileID: 9078383219005031059}
+  - component: {fileID: 6570643404579572906}
   m_Layer: 0
   m_Name: TypeMovement
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7083505842774908956
+--- !u!114 &7921888131457693645
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   comMov: {fileID: 0}
---- !u!114 &7083505842774908959
+  parent: {fileID: 0}
+--- !u!114 &9078383219005031059
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   comMov: {fileID: 0}
---- !u!114 &7083505842774908958
+--- !u!114 &6570643404579572906
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

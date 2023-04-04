@@ -13,11 +13,11 @@ public class Type1Movement : MonoBehaviour
     //初期の移動タイプを設定
     private void Awake()
     {
-        ChangeToType1();
+        comMov.getTargetIndex = GetTargetIndex;
     }
 
     //移動可能Boxのインデックスを取得
-    private int GetTargetIndex(GameObject clickedObj)
+    public int GetTargetIndex(GameObject clickedObj)
     {
         int ret = -1;
 
@@ -58,43 +58,5 @@ public class Type1Movement : MonoBehaviour
         }
 
         return ret;
-    }
-
-    private void Type1Change(int idx1, int idx2, GameObject clickedObj)
-    {
-        //位置変更
-        Vector3 tmpPos = clickedObj.transform.position;
-        Vector3 parentPos = (tmpPos + comMov.boxes[idx2].transform.position) / 2;
-        /*clickedObj.transform.DOMove(comMov.boxes[idx2].transform.position, 1f);
-        comMov.boxes[idx2].transform.DOMove(tmpPos, 1);*/
-        comMov.parent.transform.position = parentPos;
-        clickedObj.transform.SetParent(comMov.parent.transform);
-        comMov.boxes[idx2].transform.SetParent(comMov.parent.transform);
-        comMov.parent.transform.DORotate(new Vector3(0, 0, -180), 1f).SetRelative();
-        foreach (Transform children in comMov.parent.transform)
-        {
-            children.transform.DOLocalRotate(new Vector3(0, 0, 180), 1f).SetRelative();
-        }
-
-        //配列のデータを更新
-        GameObject currentBox = comMov.boxes[idx1];
-        comMov.boxes[idx1] = comMov.boxes[idx2];
-        comMov.boxes[idx2] = currentBox;
-    }
-
-    public void ChangeToType1()
-    {
-        Debug.Log("Type1");
-        comMov.getTargetIndex = GetTargetIndex;
-        comMov.change = Type1Change;
-
-        comMov.puzzleType1 = true;
-        comMov.puzzleType2 = false;
-        comMov.puzzleType3 = false;
-
-        foreach (GameObject box in comMov.boxes)
-        {
-            box.transform.localScale = new Vector2(1.5f, 1.5f);
-        }
     }
 }

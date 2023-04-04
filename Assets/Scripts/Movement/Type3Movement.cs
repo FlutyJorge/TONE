@@ -116,7 +116,7 @@ public class Type3Movement : MonoBehaviour
         {
             foreach (GameObject box in selectedBoxes)
             {
-                box.transform.localScale = new Vector2(1.7f, 1.7f);
+                box.transform.DOScale(new Vector2(1.2f, 1.2f), 0.2f);
             }
 
             //スワップを可能に
@@ -163,7 +163,7 @@ public class Type3Movement : MonoBehaviour
     {
         foreach (GameObject box in selectedBoxes)
         {
-            box.transform.localScale = new Vector2(1.5f, 1.5f);
+            box.transform.DOScale(new Vector2(1f, 1f), 0.2f);
         }
         selectedBoxes.Clear();
     }
@@ -195,7 +195,7 @@ public class Type3Movement : MonoBehaviour
 
 
 
-    private int GetTargetIndex(GameObject clickedObj)
+    public int GetTargetIndex(GameObject clickedObj)
     {
         int ret = -1;
         int sidx = -1;
@@ -254,41 +254,5 @@ public class Type3Movement : MonoBehaviour
             ret = -1;
         }
         return ret;
-    }
-
-    private void Type3Change(int idx1, int idx2, GameObject clickedObj)
-    {
-        //位置変更
-        Vector3 tmpPos = clickedObj.transform.position;
-        Vector3 parentPos = (tmpPos + comMov.boxes[idx2].transform.position) / 2;
-        /*clickedObj.transform.position = comMov.boxes[idx2].transform.position;
-        comMov.boxes[idx2].transform.position = tmpPos;*/
-        comMov.parent.transform.position = parentPos;
-        clickedObj.transform.SetParent(comMov.parent.transform);
-        comMov.boxes[idx2].transform.SetParent(comMov.parent.transform);
-        comMov.parent.transform.DORotate(new Vector3(0, 0, -180), 1f).SetRelative();
-        foreach (Transform children in comMov.parent.transform)
-        {
-            children.transform.DOLocalRotate(new Vector3(0, 0, 180), 1f).SetRelative();
-        }
-
-        //配列のデータを更新
-        GameObject currentBox = comMov.boxes[idx1];
-        comMov.boxes[idx1] = comMov.boxes[idx2];
-        comMov.boxes[idx2] = currentBox;
-
-        //selectedBoxesのサイズと配列を初期化
-        DeactivateAllBoxes();
-    }
-
-    public void ChangeType3()
-    {
-        Debug.Log("Type3");
-        comMov.getTargetIndex = GetTargetIndex;
-        comMov.change = Type3Change;
-
-        comMov.puzzleType1 = false;
-        comMov.puzzleType2 = false;
-        comMov.puzzleType3 = true;
     }
 }

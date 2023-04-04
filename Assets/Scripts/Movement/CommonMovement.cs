@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class CommonMovement : MonoBehaviour
 {
     public GameObject[] boxes;
     public GameObject parent;
+    public bool swaping = false;
+    public int swapLimit1, swapLimit2, swapLimit3;
 
     //このスクリプトからType系へのへの参照を避ける
     public delegate int Delegate1(GameObject clickedObj);
     public Delegate1 getTargetIndex;
     public delegate void Delegate2(int idx1, int idx2, GameObject clickedObj);
-    public Delegate2 change;
+    public Delegate2 type2Change;
 
     public int puzzleSize; //Boxを並べたときの縦横の数
     [SerializeField] int suffleCount;
@@ -51,6 +54,7 @@ public class CommonMovement : MonoBehaviour
     //Boxの入れ替え
     public void ChangeBox(GameObject clickedObj)
     {
+        swaping = true;
         //交換するBoxのインデックス2つ
         int idx1 = GetBoxIndex(clickedObj);
         int idx2 = getTargetIndex(clickedObj);
@@ -58,11 +62,65 @@ public class CommonMovement : MonoBehaviour
         //エラーチェック
         if (clickedObj == null || idx1 < 0 || idx2 < 0)
         {
+            Debug.Log("エラー");
+            swaping = false;
             return;
         }
 
-        change(idx1, idx2, clickedObj);
+        if (puzzleType2)
+        {
+            type2Change(idx1, idx2, clickedObj);
+        }
+        else
+        {
+            Type1And3Change(idx1, idx2, clickedObj);
+        }
         StartCoroutine(DetachChildren(parent));
+    }
+
+    //Type1とType3のスワップ処理は同一のため、このクラスでまとめて処理を記述する
+    private void Type1And3Change(int idx1, int idx2, GameObject clickedObj)
+    {
+        if (puzzleType1)
+        {
+            if (swapLimit1 == 0)
+            {
+                Debug.Log("回数上限！");
+                return;
+            }
+            --swapLimit1;
+        }
+        else if (puzzleType3)
+        {
+            if (swapLimit3 == 0)
+            {
+                Debug.Log("回数上限！");
+                return;
+            }
+            --swapLimit3;
+        }
+        else
+        {
+            Debug.Log("puzzletype3になってる");
+        }
+
+        //位置変更
+        Vector3 tmpPos = clickedObj.transform.position;
+        Vector3 parentPos = (tmpPos + boxes[idx2].transform.position) / 2;
+
+        parent.transform.position = parentPos;
+        clickedObj.transform.SetParent(parent.transform);
+        boxes[idx2].transform.SetParent(parent.transform);
+        parent.transform.DORotate(new Vector3(0, 0, -180), 1f).SetRelative();
+        foreach (Transform children in parent.transform)
+        {
+            children.transform.DOLocalRotate(new Vector3(0, 0, 180), 1f).SetRelative();
+        }
+
+        //配列のデータを更新
+        GameObject currentBox = boxes[idx1];
+        boxes[idx1] = boxes[idx2];
+        boxes[idx2] = currentBox;
     }
 
     //スワップ終了時に親子関係解除
@@ -70,6 +128,7 @@ public class CommonMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         parent.transform.DetachChildren();
+        swaping = false;
         yield break;
     }
 
@@ -97,7 +156,6 @@ public class CommonMovement : MonoBehaviour
 
             //ランダムで1つ動かす
             int rnd = Random.Range(0, mboxes.Count);
-            //ChangeBox(mboxes[rnd]);
             ChangeBox(mboxes[rnd]);
         }
     }
