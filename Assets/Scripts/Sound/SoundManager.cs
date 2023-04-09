@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
-public class SoundManager2 : MonoBehaviour
+public class SoundManager : MonoBehaviour
 {
     private AudioSource bgmAudioSource;
     private AudioSource seAudioSource;
@@ -20,9 +22,7 @@ public class SoundManager2 : MonoBehaviour
     private int playPointNum;
     private bool isSepaSongPlaying = false;
     private bool isSongPlaying = false;
-    private KeyCode[] keyCode = new KeyCode[]
-    {KeyCode.Keypad0, KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3, KeyCode.Keypad4,
-      KeyCode.Keypad5, KeyCode.Keypad6, KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9};
+    [HideInInspector] public bool isButtonChanging = false;
 
     // Start is called before the first frame update
     void Start()
@@ -51,32 +51,6 @@ public class SoundManager2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (isSepaSongPlaying)
-            {
-                seAudioSource.Stop();
-            }
-
-            isSongPlaying = true;
-            songAudioSource.Play();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            songAudioSource.Pause();
-            isSongPlaying = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Debug.Log("0‚¾");
-            songAudioSource.Stop();
-            songAudioSource.timeSamples = 0;
-            isSongPlaying = false;
-        }
-
-        SelectPlayPoint();
         if (isSepaSongPlaying)
         {
             StopSepaSound();
@@ -85,26 +59,60 @@ public class SoundManager2 : MonoBehaviour
         slider.value = songAudioSource.timeSamples;
     }
 
-    private void SelectPlayPoint()
+    public IEnumerator PlayAndStopSong(EventTrigger eveTrigger, GameObject play, GameObject stop, GameObject reset)
     {
-        if (Input.anyKeyDown)
+        if (eveTrigger.gameObject == play)
         {
-            for (int i = 0; i < keyCode.Length; ++i)
+            isButtonChanging = true;
+            if (isSepaSongPlaying)
             {
-                if (Input.GetKeyDown(keyCode[i]))
-                {
-                    Debug.Log(i);
-                    songAudioSource.Stop();
-                    songAudioSource.timeSamples = (int) playPoint[i];
-                    break;
-                }
+                seAudioSource.Stop();
             }
+
+            isSongPlaying = true;
+            play.transform.DOScale (new Vector2 (0, 0), 0.2f);
+            stop.transform.DOScale (new Vector2 (1, 1), 0.2f);
+            play.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
+            stop.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
+            songAudioSource.Play();
+            yield return new WaitForSeconds(0.2f);
+            isButtonChanging = false;
+            yield break;
+        }
+
+        if (eveTrigger.gameObject == stop)
+        {
+            isButtonChanging = true;
+            play.transform.DOScale (new Vector2 (1, 1), 0.2f);
+            stop.transform.DOScale (new Vector2 (0, 0), 0.2f);
+            play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
+            stop.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
+            songAudioSource.Pause();
+            isSongPlaying = false;
+            yield return new WaitForSeconds(0.2f);
+            isButtonChanging = false;
+            yield break;
+        }
+
+        if (eveTrigger.gameObject == reset)
+        {
+            isButtonChanging = true;
+            play.transform.DOScale(new Vector2(1, 1), 0.2f);
+            stop.transform.DOScale(new Vector2(0, 0), 0.2f);
+            play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
+            stop.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
+            songAudioSource.Stop();
+            songAudioSource.timeSamples = 0;
+            isSongPlaying = false;
+            yield return new WaitForSeconds(0.2f);
+            isButtonChanging = false;
+            yield break;
         }
     }
 
-    public void PlayPointButton(int playPointNum)
+    public void PlayFromPoint(int playPointNum)
     {
-        songAudioSource.Stop();
+        //songAudioSource.Stop();
         songAudioSource.timeSamples = (int)playPoint[playPointNum];
     }
 
@@ -115,11 +123,15 @@ public class SoundManager2 : MonoBehaviour
         return ret;
     }
 
-    public void PlaySepaSound(GameObject clickedObj)
+    public void PlaySepaSound(GameObject clickedObj, GameObject play, GameObject stop)
     {
         if (isSongPlaying)
         {
             songAudioSource.Pause();
+            play.transform.DOScale(new Vector2(1, 1), 0.2f);
+            stop.transform.DOScale(new Vector2(0, 0), 0.2f);
+            play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
+            stop.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
             isSongPlaying = false;
         }
 

@@ -8,7 +8,7 @@ public class FloatingMovement : MonoBehaviour
     public float amplitudeR;
     public float speed;
 
-    public ClickObject clickObj;
+    public EventTriggerManager eveManager;
     public Transform trans;
 
     private Vector3 firstPos;
@@ -27,7 +27,7 @@ public class FloatingMovement : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (!clickObj.clicked)
+        if (!eveManager.clicked)
         {
             FloatObject();
         }

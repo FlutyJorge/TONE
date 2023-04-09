@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class ClickObject : MonoBehaviour
+public class EventTriggerManager : MonoBehaviour
 {
     public CommonMovement comMov;
-    public SoundManager sManager;
-    [SerializeField] SoundManager2 sManager2;
+    [SerializeField] SoundManager sManager;
     [SerializeField] TypeChanger typeChanger;
-    public Camera cam;
+    [SerializeField] Camera cam;
+    [SerializeField] GameObject play;
+    [SerializeField] GameObject stop;
     public bool clicked = false;
 
     private EventTrigger eventTrigger;
@@ -44,7 +45,7 @@ public class ClickObject : MonoBehaviour
     {
         GameObject clickedObj = eventTrigger.gameObject;
         //sManager.PlaySound(clickedObj);
-        sManager2.PlaySepaSound(clickedObj);
+        sManager.PlaySepaSound(clickedObj, play, stop);
     }
 
     public void MoveUp()
@@ -58,7 +59,7 @@ public class ClickObject : MonoBehaviour
     {
         //Debug.Log("ê¨å˜");
         int playPointNum = int.Parse(eventTrigger.gameObject.name);
-        sManager2.PlayPointButton(playPointNum);
+        sManager.PlayFromPoint(playPointNum);
     }
 
     //PointerEnter&Exitóp

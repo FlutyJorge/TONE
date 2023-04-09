@@ -10,6 +10,7 @@ public class CommonMovement : MonoBehaviour
     public GameObject parent;
     public bool swaping = false;
     public int swapLimit1, swapLimit2, swapLimit3;
+    [SerializeField] int[] clearJudgmentNum = new int[16];
 
     //このスクリプトからType系へのへの参照を避ける
     public delegate int Delegate1(GameObject clickedObj);
@@ -172,7 +173,7 @@ public class CommonMovement : MonoBehaviour
         bool canclear = true;
         for (int i = 0; i < boxes.Length; ++i)
         {
-            if (boxes[i].name != i.ToString())
+            if (boxes[i].name != clearJudgmentNum[i].ToString())
             {
                 canclear = false;
                 break;
