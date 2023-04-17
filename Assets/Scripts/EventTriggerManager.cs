@@ -9,7 +9,6 @@ public class EventTriggerManager : MonoBehaviour
     public CommonMovement comMov;
     [SerializeField] SoundManager sManager;
     [SerializeField] TypeChanger typeChanger;
-    [SerializeField] Camera cam;
     [SerializeField] GameObject play;
     [SerializeField] GameObject stop;
     public bool clicked = false;
@@ -48,11 +47,10 @@ public class EventTriggerManager : MonoBehaviour
         sManager.PlaySepaSound(clickedObj, play, stop);
     }
 
-    public void MoveUp()
+    public void MoveRight(GameObject cam)
     {
-        //clicked = true;
         Debug.Log("ê¨å˜");
-        cam.transform.DOMove(new Vector3(0, 10, -10), 1.5f).SetEase(Ease.InOutBack);
+        cam.transform.DOMove(new Vector3(20, 0, -10), 1.5f).SetEase(Ease.InOutBack);
     }
 
     public void ClickPlayPoint()
@@ -65,9 +63,6 @@ public class EventTriggerManager : MonoBehaviour
     //PointerEnter&Exitóp
     public void ChangeObjectSize(float size)
     {
-        if (!typeChanger.isChanging)
-        {
-            eventTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.2f);
-        }
+        eventTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
     }
 }

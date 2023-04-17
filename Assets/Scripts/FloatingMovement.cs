@@ -25,19 +25,16 @@ public class FloatingMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
-        if (!eveManager.clicked)
-        {
-            FloatObject();
-        }
+        FloatObject();
     }
 
     private void FloatObject()
     {
         timer += Time.deltaTime;
 
-        float NoiseValueX = amplitude * (Mathf.PerlinNoise(timer * speed, seedX) - 0.5f);
+        float NoiseValueX = amplitude * (Mathf.PerlinNoise(seedX, timer * speed) - 0.5f);
         float NoiseValueY = amplitude * (Mathf.PerlinNoise(timer * speed, seedY) - 0.5f);
         float NoiseValueR = amplitude * (Mathf.PerlinNoise(timer * speed, seedR) - 0.5f);
 

@@ -10,18 +10,19 @@ public class TypeChanger : MonoBehaviour
     [SerializeField] Type1Movement type1Mov;
     [SerializeField] Type2Movement type2Mov;
     [SerializeField] Type3Movement type3Mov;
+    [SerializeField] ObjectScaler objScaler;
 
     [Header("ƒ{ƒ^ƒ“2Ží")]
     [SerializeField] GameObject[] buttons = new GameObject[3];
     [SerializeField] GameObject[] pushedButtons = new GameObject[3];
 
-    [HideInInspector] public bool isChanging = false;
+    public bool isTypeChanging = false;
 
     public void ChangeType(int num)
     {
-        if (!isChanging)
+        if (!isTypeChanging)
         {
-            isChanging = true;
+            isTypeChanging = true;
 
             switch (num)
             {
@@ -29,7 +30,7 @@ public class TypeChanger : MonoBehaviour
                     Debug.Log("Type1");
                     comMov.getTargetIndex = type1Mov.GetTargetIndex;
 
-                    StartCoroutine(ChangeToPushedImage(num));
+                    StartCoroutine(objScaler.ChangeTypeButtonScale(this, comMov, buttons, pushedButtons, num));
                     comMov.puzzleType1 = true;
                     comMov.puzzleType2 = false;
                     comMov.puzzleType3 = false;
@@ -41,7 +42,7 @@ public class TypeChanger : MonoBehaviour
                     Debug.Log("Type2");
                     comMov.getTargetIndex = type2Mov.GetTargetIndex;
 
-                    StartCoroutine(ChangeToPushedImage(num));
+                    StartCoroutine(objScaler.ChangeTypeButtonScale(this, comMov, buttons, pushedButtons, num));
                     comMov.puzzleType1 = false;
                     comMov.puzzleType2 = true;
                     comMov.puzzleType3 = false;
@@ -53,7 +54,7 @@ public class TypeChanger : MonoBehaviour
                     Debug.Log("Type3");
                     comMov.getTargetIndex = type3Mov.GetTargetIndex;
 
-                    StartCoroutine(ChangeToPushedImage(num));
+                    StartCoroutine(objScaler.ChangeTypeButtonScale(this, comMov, buttons, pushedButtons, num));
                     comMov.puzzleType1 = false;
                     comMov.puzzleType2 = false;
                     comMov.puzzleType3 = true;
@@ -68,30 +69,5 @@ public class TypeChanger : MonoBehaviour
         {
             box.transform.DOScale(new Vector2(1f, 1f), 0.2f);
         }
-    }
-    private IEnumerator ChangeToPushedImage(int num)
-    {
-        if (comMov.puzzleType1)
-        {
-            buttons[0].transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
-            pushedButtons[0].transform.DOScale(new Vector3(0, 0, 0), 0.2f);
-        }
-        else if (comMov.puzzleType2)
-        {
-            buttons[1].transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
-            pushedButtons[1].transform.DOScale(new Vector3(0, 0, 0), 0.2f);
-        }
-        else
-        {
-            buttons[2].transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
-            pushedButtons[2].transform.DOScale(new Vector3(0, 0, 0), 0.2f);
-        }
-
-        buttons[num].transform.DOScale(new Vector3(0, 0, 0), 0.2f);
-        pushedButtons[num].transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
-
-        yield return new WaitForSeconds(0.2f);
-        isChanging = false;
-        yield break;
     }
 }

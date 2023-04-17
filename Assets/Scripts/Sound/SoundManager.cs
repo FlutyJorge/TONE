@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] Slider slider;
     [SerializeField] float bpm;
     [SerializeField] float beats;
+    [SerializeField] ObjectScaler objScaler;
 
     [SerializeField] AudioClip seriesOfSong;
     [SerializeField] AudioClip[] separetedSong;
@@ -22,7 +23,7 @@ public class SoundManager : MonoBehaviour
     private int playPointNum;
     private bool isSepaSongPlaying = false;
     private bool isSongPlaying = false;
-    [HideInInspector] public bool isButtonChanging = false;
+    public bool isButtonChanging = false;
 
     // Start is called before the first frame update
     void Start()
@@ -63,12 +64,12 @@ public class SoundManager : MonoBehaviour
     {
         if (eveTrigger.gameObject == play)
         {
-            isButtonChanging = true;
             if (isSepaSongPlaying)
             {
                 seAudioSource.Stop();
             }
 
+            /*isButtonChanging = true;
             isSongPlaying = true;
             play.transform.DOScale (new Vector2 (0, 0), 0.2f);
             stop.transform.DOScale (new Vector2 (1, 1), 0.2f);
@@ -77,12 +78,20 @@ public class SoundManager : MonoBehaviour
             songAudioSource.Play();
             yield return new WaitForSeconds(0.2f);
             isButtonChanging = false;
+            yield break;*/
+
+            isSongPlaying = true;
+            isButtonChanging = true;
+            objScaler.ChangePlayerScale(play, stop, 0, 1);
+            songAudioSource.Play();
+            yield return new WaitForSeconds(0.2f);
+            isButtonChanging = false;
             yield break;
         }
 
         if (eveTrigger.gameObject == stop)
         {
-            isButtonChanging = true;
+            /*isButtonChanging = true;
             play.transform.DOScale (new Vector2 (1, 1), 0.2f);
             stop.transform.DOScale (new Vector2 (0, 0), 0.2f);
             play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
@@ -91,12 +100,20 @@ public class SoundManager : MonoBehaviour
             isSongPlaying = false;
             yield return new WaitForSeconds(0.2f);
             isButtonChanging = false;
+            yield break;*/
+
+            isSongPlaying = false;
+            isButtonChanging = true;
+            objScaler.ChangePlayerScale(play, stop, 1, 0);
+            songAudioSource.Pause();
+            yield return new WaitForSeconds(0.2f);
+            isButtonChanging = false;
             yield break;
         }
 
         if (eveTrigger.gameObject == reset)
         {
-            isButtonChanging = true;
+            /*isButtonChanging = true;
             play.transform.DOScale(new Vector2(1, 1), 0.2f);
             stop.transform.DOScale(new Vector2(0, 0), 0.2f);
             play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
@@ -104,6 +121,15 @@ public class SoundManager : MonoBehaviour
             songAudioSource.Stop();
             songAudioSource.timeSamples = 0;
             isSongPlaying = false;
+            yield return new WaitForSeconds(0.2f);
+            isButtonChanging = false;
+            yield break;*/
+
+            isSongPlaying = false;
+            isButtonChanging = true;
+            objScaler.ChangePlayerScale(play, stop, 1, 0);
+            songAudioSource.Stop();
+            songAudioSource.timeSamples = 0;
             yield return new WaitForSeconds(0.2f);
             isButtonChanging = false;
             yield break;
