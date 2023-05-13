@@ -5,14 +5,16 @@ using DG.Tweening;
 
 public class Type3Movement : MonoBehaviour
 {
+    public PaintToolMovement paintToolMov;
     public RectTransform selectorImage; //範囲選択時の画像
     public CommonMovement comMov;
     public List<GameObject> selectedBoxes = new List<GameObject>(); //選択中のBoxを入れる
     public bool canType3Swap = false;
+    [HideInInspector] public bool canResetBoxSize = true;
 
     private Camera cam;
     private Rect selectionRect;
-    private Vector2 startPos, endPos;
+    [HideInInspector] public Vector2 startPos, endPos;
 
     private void Start()
     {
@@ -30,9 +32,10 @@ public class Type3Movement : MonoBehaviour
             selectionRect = new Rect();
         }
 
-        if (Input.GetMouseButton(0) && !canType3Swap && comMov.puzzleType3)
+        if (Input.GetMouseButton(0) && !canType3Swap && comMov.puzzleType3 && !PaintToolMovement.isDraging)
         {
             endPos = Input.mousePosition;
+
             DrawRectangle();
 
             //計算X
@@ -73,14 +76,18 @@ public class Type3Movement : MonoBehaviour
             }
             else
             {
-                canType3Swap = false;
-                DeactivateAllBoxes();
+                if (canResetBoxSize)
+                {
+                    canType3Swap = false;
+                    DeactivateAllBoxes();
+                }
+                
             }
         }
     }
 
     //Boxの範囲選択画像の大きさをマウス位置に合わせて変更
-    private void DrawRectangle()
+    public void DrawRectangle()
     {
         //画像の中心を計算
         Vector2 boxStart = startPos;
@@ -159,7 +166,7 @@ public class Type3Movement : MonoBehaviour
     }
 
     //選択されたBoxの初期化
-    private void DeactivateAllBoxes()
+    public void DeactivateAllBoxes()
     {
         foreach (GameObject box in selectedBoxes)
         {

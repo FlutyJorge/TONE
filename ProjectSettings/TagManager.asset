@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - NotesManager
+  - DestroyNoteCollider
+  - Note1
+  - PaintToolChecker
+  - SoundButton
   layers:
   - Default
   - TransparentFX

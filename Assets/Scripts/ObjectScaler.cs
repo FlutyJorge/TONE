@@ -123,4 +123,13 @@ public class ObjectScaler : MonoBehaviour
         play.GetComponent<SpriteRenderer>().DOFade(playNum, 0.1f);
         stop.GetComponent<SpriteRenderer>().DOFade(stopNum, 0.1f);
     }
+
+    //PaintTool—p
+    public void ChangePaintToolScaleForEnterAndExit(float size)
+    {
+        if (!PaintToolMovement.isDraging)
+        {
+            eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
+        }
+    }
 }

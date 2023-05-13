@@ -57,7 +57,7 @@ public class NotesManager : MonoBehaviour
     {
         canGenerate1 = false;
         int rndIndex = Random.Range(0, 16);
-        yield return new WaitForSeconds(Random.Range(5, 7));
+        yield return new WaitForSeconds(Random.Range(2, 5));
         Instantiate(note1, new Vector3(noteGenes[rndIndex].transform.position.x, noteGenes[rndIndex].transform.position.y, 0), Quaternion.identity);
         yield return new WaitForSeconds(Random.Range(5, 7));
         canGenerate1 = true;

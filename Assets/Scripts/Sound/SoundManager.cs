@@ -69,17 +69,6 @@ public class SoundManager : MonoBehaviour
                 seAudioSource.Stop();
             }
 
-            /*isButtonChanging = true;
-            isSongPlaying = true;
-            play.transform.DOScale (new Vector2 (0, 0), 0.2f);
-            stop.transform.DOScale (new Vector2 (1, 1), 0.2f);
-            play.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
-            stop.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
-            songAudioSource.Play();
-            yield return new WaitForSeconds(0.2f);
-            isButtonChanging = false;
-            yield break;*/
-
             isSongPlaying = true;
             isButtonChanging = true;
             objScaler.ChangePlayerScale(play, stop, 0, 1);
@@ -91,17 +80,6 @@ public class SoundManager : MonoBehaviour
 
         if (eveTrigger.gameObject == stop)
         {
-            /*isButtonChanging = true;
-            play.transform.DOScale (new Vector2 (1, 1), 0.2f);
-            stop.transform.DOScale (new Vector2 (0, 0), 0.2f);
-            play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
-            stop.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
-            songAudioSource.Pause();
-            isSongPlaying = false;
-            yield return new WaitForSeconds(0.2f);
-            isButtonChanging = false;
-            yield break;*/
-
             isSongPlaying = false;
             isButtonChanging = true;
             objScaler.ChangePlayerScale(play, stop, 1, 0);
@@ -113,18 +91,6 @@ public class SoundManager : MonoBehaviour
 
         if (eveTrigger.gameObject == reset)
         {
-            /*isButtonChanging = true;
-            play.transform.DOScale(new Vector2(1, 1), 0.2f);
-            stop.transform.DOScale(new Vector2(0, 0), 0.2f);
-            play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
-            stop.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
-            songAudioSource.Stop();
-            songAudioSource.timeSamples = 0;
-            isSongPlaying = false;
-            yield return new WaitForSeconds(0.2f);
-            isButtonChanging = false;
-            yield break;*/
-
             isSongPlaying = false;
             isButtonChanging = true;
             objScaler.ChangePlayerScale(play, stop, 1, 0);

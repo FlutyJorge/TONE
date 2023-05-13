@@ -74,3 +74,4 @@ crashlytics-build.properties
 #Add ignore files myself
 Assets/Plugins
 Assets/Sounds
+Assets/Font

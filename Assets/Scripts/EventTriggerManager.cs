@@ -29,28 +29,40 @@ public class EventTriggerManager : MonoBehaviour
     
     public void OnBoxClick()
     {
-        if (!comMov.swaping)
+        if (Input.GetMouseButtonUp(0))
         {
-            GameObject clickedObj = eventTrigger.gameObject;
-            comMov.ChangeBox(clickedObj);
-        }
-        else
-        {
-            Debug.Log("スワップ中！");
+            if (!comMov.swaping)
+            {
+                GameObject clickedObj = eventTrigger.gameObject;
+                comMov.ChangeBox(clickedObj);
+            }
+            else
+            {
+                Debug.Log("スワップ中！");
+            }
         }
     }
 
     public void OnSoundButtonClick()
     {
-        GameObject clickedObj = eventTrigger.gameObject;
-        //sManager.PlaySound(clickedObj);
-        sManager.PlaySepaSound(clickedObj, play, stop);
+        if (Input.GetMouseButtonUp(1))
+        {
+            Debug.Log("通貨");
+            GameObject clickedObj = eventTrigger.gameObject;
+            sManager.PlaySepaSound(clickedObj, play, stop);
+        }
     }
 
-    public void MoveRight(GameObject cam)
+    public void SlideCamera(GameObject cam)
     {
-        Debug.Log("成功");
-        cam.transform.DOMove(new Vector3(20, 0, -10), 1.5f).SetEase(Ease.InOutBack);
+        if (eventTrigger.gameObject.name == "Start")
+        {
+            cam.transform.DOMove(new Vector3(20, 0, -10), 1.5f).SetEase(Ease.InOutBack);
+        }
+        else if (eventTrigger.gameObject.name == "Back")
+        {
+            cam.transform.DOMove(new Vector3(0, 0, -10), 1.5f).SetEase(Ease.InOutBack);
+        }
     }
 
     public void ClickPlayPoint()

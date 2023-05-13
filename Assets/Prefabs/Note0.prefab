@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1.2
+  canChangeSound: 1
 --- !u!114 &6019270246865471754
 MonoBehaviour:
   m_ObjectHideFlags: 0

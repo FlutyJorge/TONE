@@ -20,20 +20,20 @@ public class CommonMovement : MonoBehaviour
 
     public int puzzleSize; //Boxを並べたときの縦横の数
     [SerializeField] int suffleCount;
-    [SerializeField] bool isClear = false;
     public bool puzzleType1, puzzleType2, puzzleType3;
+
+    [SerializeField] Sprite[] CounterSprites;
+    [SerializeField] GameObject[] typeCounters;
+    public SpriteRenderer[] counterSpriteRen = new SpriteRenderer[3];
 
     private void Start()
     {
-        //Suffle(getTargetIndex);
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
+        for (int i = 0; i < counterSpriteRen.Length; ++i)
         {
-            CheckClear();
+            counterSpriteRen[i] = typeCounters[i].GetComponent<SpriteRenderer>();
         }
+
+        //Suffle(getTargetIndex);
     }
 
     //クリックしたBoxのインデックスを取得
@@ -90,6 +90,7 @@ public class CommonMovement : MonoBehaviour
                 return;
             }
             --swapLimit1;
+            StartCoroutine(ChangeCounterNum(1, swapLimit1));
         }
         else if (puzzleType3)
         {
@@ -99,6 +100,7 @@ public class CommonMovement : MonoBehaviour
                 return;
             }
             --swapLimit3;
+            StartCoroutine(ChangeCounterNum(3, swapLimit3));
         }
         else
         {
@@ -133,6 +135,23 @@ public class CommonMovement : MonoBehaviour
         yield break;
     }
 
+    public IEnumerator ChangeCounterNum(int puzzleTypeNum, int swapLimit)
+    {
+        counterSpriteRen[puzzleTypeNum - 1].DOFade(0, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+
+        if (swapLimit > 0)
+        {
+            counterSpriteRen[puzzleTypeNum - 1].sprite = CounterSprites[swapLimit - 1];
+            counterSpriteRen[puzzleTypeNum - 1].DOFade(1, 0.5f);
+        }
+        else
+        {
+            counterSpriteRen[puzzleTypeNum - 1].sprite = null;
+        }
+        yield break;
+    }
+
     //シャッフル(本番は不要)
     public void Suffle(Delegate1 getTargetIndex)
     {
@@ -158,32 +177,6 @@ public class CommonMovement : MonoBehaviour
             //ランダムで1つ動かす
             int rnd = Random.Range(0, mboxes.Count);
             ChangeBox(mboxes[rnd]);
-        }
-    }
-
-    //クリアチェック
-    private void CheckClear()
-    {
-        if (isClear)
-        {
-            return;
-        }
-
-        //1つでもインデックスとBoxの名前が一致しなければフラグをオフに
-        bool canclear = true;
-        for (int i = 0; i < boxes.Length; ++i)
-        {
-            if (boxes[i].name != clearJudgmentNum[i].ToString())
-            {
-                canclear = false;
-                break;
-            }
-        }
-
-        if (canclear)
-        {
-            isClear = true;
-            Debug.Log("クリア");
         }
     }
 }

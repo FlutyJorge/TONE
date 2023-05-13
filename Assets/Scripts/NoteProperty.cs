@@ -1,22 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class NoteProperty : MonoBehaviour
 {
     [SerializeField] float speed;
+    [SerializeField] bool canChangeSound;
     private NotesManager notesMana;
 
     private Vector3 randomPos;
     private Vector3 targetPos;
     private float randomRotate;
     private AudioSource noteAuSource;
+    private SpriteRenderer spriteRen;
 
     // Start is called before the first frame update
     void Start()
     {
         notesMana = GameObject.FindWithTag("NotesManager").GetComponent<NotesManager>();
         noteAuSource = GetComponent<AudioSource>();
+        spriteRen = GetComponent<SpriteRenderer>();
 
         if (notesMana.pushedNoteNum < notesMana.noteAuClips.Length - 1)
         {
@@ -43,6 +47,7 @@ public class NoteProperty : MonoBehaviour
 
     public void ClickNote0()
     {
+        canChangeSound = true;
         noteAuSource.PlayOneShot(notesMana.noteAuClips[notesMana.pushedNoteNum]);
     }
 
@@ -56,6 +61,7 @@ public class NoteProperty : MonoBehaviour
         else
         {
             notesMana.isInterval = true;
+            canChangeSound = true;
             StartCoroutine(SetNoteChangeInterval());
         }
     }
@@ -70,8 +76,31 @@ public class NoteProperty : MonoBehaviour
             notesMana.pushedNoteNum = 0;
         }
 
-        yield return new WaitForSeconds (9f);
-        notesMana.isInterval = false;
+        /*yield return new WaitForSeconds (9f);
+        notesMana.isInterval = false;*/
         yield break;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("DestroyNoteCollider"))
+        {
+            if (!canChangeSound)
+            {
+                notesMana.pushedNoteNum = 0;
+            }
+
+            if (this.gameObject.CompareTag("Note1"))
+            {
+                notesMana.isInterval = false;
+            }
+            spriteRen.DOFade(0, 0.5f);
+            Invoke("DestroyNote", 1f);
+        }
+    }
+
+    private void DestroyNote()
+    {
+        Destroy(this.gameObject);
     }
 }

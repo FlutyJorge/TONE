@@ -59,6 +59,7 @@ public class Type2Movement : MonoBehaviour
             return;
         }
         --comMov.swapLimit2;
+        StartCoroutine(comMov.ChangeCounterNum(2, comMov.swapLimit2));
 
         //à íuïœçX
         Vector3 tmpPos = clickedObj.transform.position;

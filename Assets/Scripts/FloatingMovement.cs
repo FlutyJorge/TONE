@@ -8,7 +8,6 @@ public class FloatingMovement : MonoBehaviour
     public float amplitudeR;
     public float speed;
 
-    public EventTriggerManager eveManager;
     public Transform trans;
 
     private Vector3 firstPos;
