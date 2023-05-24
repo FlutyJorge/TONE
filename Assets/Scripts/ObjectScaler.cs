@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class ObjectScaler : MonoBehaviour
@@ -20,7 +21,7 @@ public class ObjectScaler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     //スケーリングに制約がない場合用
@@ -29,6 +30,7 @@ public class ObjectScaler : MonoBehaviour
         eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
     }
 
+    //クリック中はEnterとExitを反応させない場合
     public void ChangeScaleForEnterAndExit(float size)
     {
         if (!isClicked)
@@ -112,8 +114,8 @@ public class ObjectScaler : MonoBehaviour
 
     private void ChangeTypeButtonScaleSet(GameObject[] buttons, GameObject[] pushedButtons, int buttonIndex)
     {
-        buttons[buttonIndex].transform.DOScale(new Vector2 (1f, 1f), 0.2f);
-        pushedButtons[buttonIndex].transform.DOScale(new Vector2 (0, 0), 0.2f);
+        buttons[buttonIndex].transform.DOScale(new Vector2(1f, 1f), 0.2f);
+        pushedButtons[buttonIndex].transform.DOScale(new Vector2(0, 0), 0.2f);
     }
 
     public void ChangePlayerScale(GameObject play, GameObject stop, int playNum, int stopNum)

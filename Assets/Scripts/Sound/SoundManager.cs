@@ -7,16 +7,16 @@ using DG.Tweening;
 
 public class SoundManager : MonoBehaviour
 {
-    private AudioSource bgmAudioSource;
-    private AudioSource seAudioSource;
-    private AudioSource songAudioSource;
+    //private AudioSource seAudioSource;
+    [HideInInspector] public AudioSource songAudioS;
+    [HideInInspector] public AudioSource sepaSongAudioS;
+    [HideInInspector] public static AudioSource seAudioS;
     [SerializeField] Slider slider;
     [SerializeField] float bpm;
     [SerializeField] float beats;
     [SerializeField] ObjectScaler objScaler;
 
     [SerializeField] AudioClip seriesOfSong;
-    [SerializeField] AudioClip[] separetedSong;
 
     private float samplePerBeats;
     private float[] playPoint = new float[17];
@@ -26,18 +26,25 @@ public class SoundManager : MonoBehaviour
     public bool isButtonChanging = false;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //同一コンポーネントをBGM用とSE用で別々に取得
         AudioSource[] audioSource = GetComponents<AudioSource>();
-        bgmAudioSource = audioSource[0];
-        seAudioSource = audioSource[1];
-        songAudioSource = audioSource[2];
+        songAudioS = audioSource[0];
+        sepaSongAudioS = audioSource[1];
+        seAudioS = audioSource[2];
 
-        songAudioSource.clip = seriesOfSong;
-        seAudioSource.clip = seriesOfSong;
-        samplePerBeats = 60 / bpm * beats * songAudioSource.clip.frequency;
-        Debug.Log(samplePerBeats);
+        songAudioS.clip = seriesOfSong;
+        sepaSongAudioS.clip = seriesOfSong;
+
+        //三拍子の場合6拍子で曲を分割したい
+
+        if (beats == 3)
+        {
+            beats = 6;
+        }
+
+        samplePerBeats = 60 / bpm * beats * songAudioS.clip.frequency;
 
         for (int i = 0; i < playPoint.Length; ++i)
         {
@@ -46,7 +53,7 @@ public class SoundManager : MonoBehaviour
         }
 
         //スライダー設定
-        slider.maxValue = songAudioSource.clip.length * songAudioSource.clip.frequency;
+        slider.maxValue = songAudioS.clip.length * songAudioS.clip.frequency;
     }
 
     // Update is called once per frame
@@ -57,7 +64,7 @@ public class SoundManager : MonoBehaviour
             StopSepaSound();
         }
 
-        slider.value = songAudioSource.timeSamples;
+        slider.value = songAudioS.timeSamples;
     }
 
     public IEnumerator PlayAndStopSong(EventTrigger eveTrigger, GameObject play, GameObject stop, GameObject reset)
@@ -66,13 +73,13 @@ public class SoundManager : MonoBehaviour
         {
             if (isSepaSongPlaying)
             {
-                seAudioSource.Stop();
+                sepaSongAudioS.Stop();
             }
 
             isSongPlaying = true;
             isButtonChanging = true;
             objScaler.ChangePlayerScale(play, stop, 0, 1);
-            songAudioSource.Play();
+            songAudioS.Play();
             yield return new WaitForSeconds(0.2f);
             isButtonChanging = false;
             yield break;
@@ -83,7 +90,7 @@ public class SoundManager : MonoBehaviour
             isSongPlaying = false;
             isButtonChanging = true;
             objScaler.ChangePlayerScale(play, stop, 1, 0);
-            songAudioSource.Pause();
+            songAudioS.Pause();
             yield return new WaitForSeconds(0.2f);
             isButtonChanging = false;
             yield break;
@@ -94,8 +101,8 @@ public class SoundManager : MonoBehaviour
             isSongPlaying = false;
             isButtonChanging = true;
             objScaler.ChangePlayerScale(play, stop, 1, 0);
-            songAudioSource.Stop();
-            songAudioSource.timeSamples = 0;
+            songAudioS.Stop();
+            songAudioS.timeSamples = 0;
             yield return new WaitForSeconds(0.2f);
             isButtonChanging = false;
             yield break;
@@ -105,7 +112,7 @@ public class SoundManager : MonoBehaviour
     public void PlayFromPoint(int playPointNum)
     {
         //songAudioSource.Stop();
-        songAudioSource.timeSamples = (int)playPoint[playPointNum];
+        songAudioS.timeSamples = (int)playPoint[playPointNum];
     }
 
     private int GetSoundButtonNum(GameObject clickedObj)
@@ -119,7 +126,7 @@ public class SoundManager : MonoBehaviour
     {
         if (isSongPlaying)
         {
-            songAudioSource.Pause();
+            songAudioS.Pause();
             play.transform.DOScale(new Vector2(1, 1), 0.2f);
             stop.transform.DOScale(new Vector2(0, 0), 0.2f);
             play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
@@ -130,15 +137,15 @@ public class SoundManager : MonoBehaviour
         isSepaSongPlaying = false;
         playPointNum = GetSoundButtonNum(clickedObj);
 
-        seAudioSource.timeSamples = (int) playPoint[playPointNum];
-        seAudioSource.Play();
+        sepaSongAudioS.timeSamples = (int) playPoint[playPointNum];
+        sepaSongAudioS.Play();
         isSepaSongPlaying = true;
     }
     private void StopSepaSound()
     {
-        if (playPointNum != 15 && seAudioSource.timeSamples > (int)playPoint[playPointNum + 1] - 1)
+        if (playPointNum != 15 && sepaSongAudioS.timeSamples > (int)playPoint[playPointNum + 1] - 1)
         {
-            seAudioSource.Stop();
+            sepaSongAudioS.Stop();
             isSepaSongPlaying = false;
         }
     }

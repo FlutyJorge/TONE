@@ -11,7 +11,7 @@ public class EventTriggerManager : MonoBehaviour
     [SerializeField] TypeChanger typeChanger;
     [SerializeField] GameObject play;
     [SerializeField] GameObject stop;
-    public bool clicked = false;
+    private bool isclicked = false;
 
     private EventTrigger eventTrigger;
 
@@ -55,13 +55,17 @@ public class EventTriggerManager : MonoBehaviour
 
     public void SlideCamera(GameObject cam)
     {
-        if (eventTrigger.gameObject.name == "Start")
+        if (eventTrigger.gameObject.name == "StartForTitle" && !isclicked)
         {
+            isclicked = true;
             cam.transform.DOMove(new Vector3(20, 0, -10), 1.5f).SetEase(Ease.InOutBack);
+            StartCoroutine(SetInterval(1.5f));
         }
-        else if (eventTrigger.gameObject.name == "Back")
+        else if (eventTrigger.gameObject.name == "Back" && !isclicked)
         {
+            isclicked = true;
             cam.transform.DOMove(new Vector3(0, 0, -10), 1.5f).SetEase(Ease.InOutBack);
+            StartCoroutine(SetInterval(1.5f));
         }
     }
 
@@ -76,5 +80,12 @@ public class EventTriggerManager : MonoBehaviour
     public void ChangeObjectSize(float size)
     {
         eventTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
+    }
+
+    //連打防止用にインターバルを設ける関数
+    private IEnumerator SetInterval(float intervalTime)
+    {
+        yield return new WaitForSeconds(intervalTime);
+        isclicked = false;
     }
 }

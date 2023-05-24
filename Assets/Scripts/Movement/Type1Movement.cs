@@ -50,8 +50,10 @@ public class Type1Movement : MonoBehaviour
                 continue;
             }
 
-            //名前による判別で移動先のインデックスを確定
-            if (comMov.boxes[nidx].name == "15")
+            //タグによる判別で移動先のインデックスを確定
+            GameObject childObj = comMov.boxes[nidx].transform.GetChild(0).gameObject;
+
+            if (childObj.tag == "PaintToolCheckerForCircle")
             {
                 ret = nidx;
             }

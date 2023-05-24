@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class CommonMovement : MonoBehaviour
 {
+    [SerializeField] SEManager seMana;
     public GameObject[] boxes;
     public GameObject parent;
     public bool swaping = false;
@@ -22,17 +23,29 @@ public class CommonMovement : MonoBehaviour
     [SerializeField] int suffleCount;
     public bool puzzleType1, puzzleType2, puzzleType3;
 
+    [Space(10)]
+    [Header("回数制限がある場合にアタッチが必要")]
     [SerializeField] Sprite[] CounterSprites;
     [SerializeField] GameObject[] typeCounters;
-    public SpriteRenderer[] counterSpriteRen = new SpriteRenderer[3];
+    private SpriteRenderer[] counterSpriteRen = new SpriteRenderer[3];
+    public bool setSwapLimit;
+
+    [Space(10)]
+    [Header("SE")]
+    [SerializeField] AudioClip swapSound;
+    [SerializeField] AudioClip buzzerSound;
 
     private void Start()
     {
+        if (!setSwapLimit)
+        {
+            return;
+        }
+
         for (int i = 0; i < counterSpriteRen.Length; ++i)
         {
             counterSpriteRen[i] = typeCounters[i].GetComponent<SpriteRenderer>();
         }
-
         //Suffle(getTargetIndex);
     }
 
@@ -82,30 +95,31 @@ public class CommonMovement : MonoBehaviour
     //Type1とType3のスワップ処理は同一のため、このクラスでまとめて処理を記述する
     private void Type1And3Change(int idx1, int idx2, GameObject clickedObj)
     {
-        if (puzzleType1)
+        if (puzzleType1 && setSwapLimit)
         {
             if (swapLimit1 == 0)
             {
+                seMana.PlayOneShot(buzzerSound);
                 Debug.Log("回数上限！");
                 return;
             }
             --swapLimit1;
             StartCoroutine(ChangeCounterNum(1, swapLimit1));
         }
-        else if (puzzleType3)
+        else if (puzzleType3 && setSwapLimit)
         {
             if (swapLimit3 == 0)
             {
+                seMana.PlayOneShot(buzzerSound);
                 Debug.Log("回数上限！");
                 return;
             }
             --swapLimit3;
             StartCoroutine(ChangeCounterNum(3, swapLimit3));
         }
-        else
-        {
-            Debug.Log("puzzletype3になってる");
-        }
+
+        //スワップ成功の音を出す
+        seMana.PlayOneShot(swapSound);
 
         //位置変更
         Vector3 tmpPos = clickedObj.transform.position;
@@ -124,6 +138,8 @@ public class CommonMovement : MonoBehaviour
         GameObject currentBox = boxes[idx1];
         boxes[idx1] = boxes[idx2];
         boxes[idx2] = currentBox;
+
+
     }
 
     //スワップ終了時に親子関係解除

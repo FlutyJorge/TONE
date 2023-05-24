@@ -6,10 +6,12 @@ using DG.Tweening;
 
 public class PaintToolMovement : MonoBehaviour
 {
+    [SerializeField] SEManager seMana;
     public Type3Movement type3Mov;
     [SerializeField] Camera cam;
     [SerializeField] GameObject[] paintTools;
     [SerializeField] Sprite[] paintedBox;
+    [SerializeField] Sprite[] paintedCircle;
     public bool isCollision = false;
     [HideInInspector] public static bool isDraging = false;
 
@@ -17,6 +19,9 @@ public class PaintToolMovement : MonoBehaviour
     private SpriteRenderer spriteRen;
     private Vector3 startPos;
     private bool isDeletedSelector = false;
+    private bool isCircle = false;
+
+    [SerializeField] AudioClip colorChangeSound;
 
     // Start is called before the first frame update
     void Start()
@@ -71,6 +76,13 @@ public class PaintToolMovement : MonoBehaviour
             box.transform.DOScale(new Vector2(1.1f, 1.1f), 0.1f);
             isCollision = true;
         }
+        else if (collision.CompareTag("PaintToolCheckerForCircle"))
+        {
+            box = collision.transform.parent.gameObject;
+            box.transform.DOScale(new Vector2(1.1f, 1.1f), 0.1f);
+            isCollision = true;
+            isCircle = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -80,6 +92,13 @@ public class PaintToolMovement : MonoBehaviour
             box = collision.transform.parent.gameObject;
             box.transform.DOScale(new Vector2(1f, 1f), 0.1f);
             isCollision = false;
+        }
+        else if (collision.CompareTag("PaintToolCheckerForCircle"))
+        {
+            box = collision.transform.parent.gameObject;
+            box.transform.DOScale(new Vector2(1f, 1f), 0.1f);
+            isCollision = false;
+            isCircle = false;
         }
     }
 
@@ -92,6 +111,9 @@ public class PaintToolMovement : MonoBehaviour
 
     private IEnumerator ChangeBoxColor()
     {
+        //ÉJÉâÅ[ïœçXéûÇÃSE
+        seMana.PlayOneShot(colorChangeSound);
+
         SpriteRenderer boxSpriteRen = box.GetComponent<SpriteRenderer>();
         int spriteIdx = -1;
 
@@ -106,7 +128,16 @@ public class PaintToolMovement : MonoBehaviour
 
         boxSpriteRen.DOFade(0, 0.5f);
         yield return new WaitForSeconds(0.5f);
-        boxSpriteRen.sprite = paintedBox[spriteIdx];
+
+        if (isCircle)
+        {
+            boxSpriteRen.sprite = paintedCircle[spriteIdx];
+            isCircle = false;
+        }
+        else
+        {
+            boxSpriteRen.sprite = paintedBox[spriteIdx];
+        }
         boxSpriteRen.DOFade(1, 0.5f);
         yield break;
     }

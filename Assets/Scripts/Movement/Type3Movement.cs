@@ -5,12 +5,17 @@ using DG.Tweening;
 
 public class Type3Movement : MonoBehaviour
 {
-    public PaintToolMovement paintToolMov;
+    [SerializeField] SEManager seMana;
     public RectTransform selectorImage; //範囲選択時の画像
     public CommonMovement comMov;
     public List<GameObject> selectedBoxes = new List<GameObject>(); //選択中のBoxを入れる
     public bool canType3Swap = false;
     [HideInInspector] public bool canResetBoxSize = true;
+
+    [Space(10)]
+    [Header("SE")]
+    [SerializeField] AudioClip selectSound;
+
 
     private Camera cam;
     private Rect selectionRect;
@@ -128,6 +133,8 @@ public class Type3Movement : MonoBehaviour
 
             //スワップを可能に
             canType3Swap = true;
+
+            seMana.PlayOneShot(selectSound);
         }
     }
 

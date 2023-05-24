@@ -9,6 +9,7 @@ TagManager:
   - Note1
   - PaintToolChecker
   - SoundButton
+  - PaintToolCheckerForCircle
   layers:
   - Default
   - TransparentFX

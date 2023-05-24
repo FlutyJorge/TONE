@@ -144,10 +144,10 @@ TextureImporter:
       name: ClearButton_0
       rect:
         serializedVersion: 2
-        x: 23
+        x: 22
         y: 23
-        width: 246
-        height: 246
+        width: 227
+        height: 226
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,8 +155,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 33fc7dfd743532b46a0a88461f3e37a7
-      internalID: -318518065
+      spriteID: 67e5adfb425769d4f93581743f4228c3
+      internalID: 1856961114
       vertices: []
       indices: 
       edges: []
@@ -165,10 +165,10 @@ TextureImporter:
       name: ClearButton_1
       rect:
         serializedVersion: 2
-        x: 343
+        x: 322
         y: 23
-        width: 246
-        height: 246
+        width: 227
+        height: 226
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -176,8 +176,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f929904925b43634cab4135e433d4594
-      internalID: -1938953511
+      spriteID: 3c2cdb608b5b82c489a5f9c4df2311f5
+      internalID: 1577930418
       vertices: []
       indices: 
       edges: []
@@ -193,8 +193,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ClearButton_0: -318518065
-      ClearButton_1: -1938953511
+      ClearButton_0: 1856961114
+      ClearButton_1: 1577930418
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

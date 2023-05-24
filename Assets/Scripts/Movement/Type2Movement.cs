@@ -6,6 +6,12 @@ using DG.Tweening;
 public class Type2Movement : MonoBehaviour
 {
     public CommonMovement comMov;
+    [SerializeField] SEManager seMana;
+
+    [Space(10)]
+    [Header("SE")]
+    [SerializeField] AudioClip swapSound;
+    [SerializeField] AudioClip buzzerSound;
 
     private void Awake()
     {
@@ -53,13 +59,23 @@ public class Type2Movement : MonoBehaviour
 
     private void Type2Change(int idx1, int idx2, GameObject clickedObj)
     {
-        if (comMov.swapLimit2 == 0)
+        if (comMov.setSwapLimit)
         {
-            Debug.Log("回数上限！");
-            return;
+            if (comMov.swapLimit2 == 0)
+            {
+                seMana.PlayOneShot(buzzerSound);
+                Debug.Log("回数上限！");
+                return;
+            }
+            else
+            {
+                --comMov.swapLimit2;
+                StartCoroutine(comMov.ChangeCounterNum(2, comMov.swapLimit2));
+            }
         }
-        --comMov.swapLimit2;
-        StartCoroutine(comMov.ChangeCounterNum(2, comMov.swapLimit2));
+
+        //スワップ成功時の音を出す
+        seMana.PlayOneShot(swapSound);
 
         //位置変更
         Vector3 tmpPos = clickedObj.transform.position;
