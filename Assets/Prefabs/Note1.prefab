@@ -119,8 +119,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4.2
   canChangeSound: 0
-  isNote1: 1
   buzzer: {fileID: 8300000, guid: 165335c3167285846a6c9563661b07b3, type: 3}
+  isNote1: 1
+  note1Prefab: {fileID: 5959328856373276045}
+  differentNote1:
+  - {fileID: 1606197138, guid: 1c2bfe8f11e53e3428882d73c40443e4, type: 3}
+  - {fileID: -401255804, guid: 1c2bfe8f11e53e3428882d73c40443e4, type: 3}
 --- !u!114 &6926398845642936600
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,8 +8,6 @@ public class OptionClick : MonoBehaviour
 {
     [SerializeField] GameObject optionScene;
     [SerializeField] GameObject blackBoard;
-    private SpriteRenderer blackBoardRen;
-    private BoxCollider2D blackBoardCol;
 
     [Space(10)]
     [Header("タイトル以外でアタッチが必要なもの")]
@@ -24,6 +22,7 @@ public class OptionClick : MonoBehaviour
 
     [Space(10)]
     [Header("回数制限がある場合にアタッチが必要なもの")]
+    [SerializeField] FailedManager failedMana;
     [SerializeField] CircleCollider2D homeButton1Col;
     [SerializeField] CircleCollider2D retryButtonCol;
 
@@ -31,6 +30,7 @@ public class OptionClick : MonoBehaviour
     [Header("タイトルでアタッチが必要なもの")]
     [SerializeField] SpriteRenderer option0Ren;
     [SerializeField] SpriteRenderer option0BackgroundRen;
+    [SerializeField] GameObject quitGame;
 
     [Space(10)]
     [Header("チュートリアルでアタッチが必要なもの")]
@@ -41,22 +41,22 @@ public class OptionClick : MonoBehaviour
     [Header("シーンの種類")]
     public bool isTitle = false;
     public bool isTutorial = false;
+    public bool isStage = false;
 
     [HideInInspector] public bool isEnterOption = false;
     [HideInInspector] public bool isOptionAppeared = false;
+    private SpriteRenderer blackBoardRen;
+    private BoxCollider2D blackBoardCol;
+    const int fadeTime = 1;
+    const int moveTime = 1;
+    const int center = -10;
+    const int outOfCamera = 10;
     private bool isMoving = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         blackBoardRen = blackBoard.GetComponent<SpriteRenderer>();
         blackBoardCol = blackBoard.GetComponent<BoxCollider2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void ClickOptionButton()
@@ -64,37 +64,31 @@ public class OptionClick : MonoBehaviour
         if (!isOptionAppeared && !isMoving)
         {
             isMoving = true;
-            blackBoardRen.DOFade(1, 1f);
+            blackBoardRen.DOFade(1, fadeTime);
             blackBoardCol.enabled = true;
-            optionScene.transform.DOMove(new Vector3(0, -10, 0), 1f).SetRelative(true).SetEase(Ease.InOutBack);
+
+            optionScene.transform.DOMove(new Vector3(0, center, 0), moveTime).SetRelative(true).SetEase(Ease.InOutBack);
 
             if (isTutorial)
             {
-                description.DOFade(0, 1f);
-                text.DOFade(0, 1f);
+                description.DOFade(0, fadeTime);
+                text.DOFade(0, fadeTime);
             }
 
             if (isTitle)
             {
-                option0Ren.sortingOrder = -1;
-                option0BackgroundRen.sortingOrder = -2;
+                int aboveNote = -1;
+                option0Ren.sortingOrder = aboveNote;
+                option0BackgroundRen.sortingOrder = aboveNote - 1;
+                quitGame.transform.DOMove(new Vector3(0, center, 0), moveTime).SetRelative(true).SetEase(Ease.InOutBack);
             }
-            else if (!isTitle)
+            else
             {
-                backTotitle.transform.DOMove(new Vector3(0, -10, 0), 1f).SetRelative(true).SetEase(Ease.InOutBack);
+                backTotitle.transform.DOMove(new Vector3(0, center, 0), moveTime).SetRelative(true).SetEase(Ease.InOutBack);
             }
 
-            if (clearMana != null && clearMana.isClear)
-            {
-                homeButtonCol.enabled = false;
-                nextStageButtonCol.enabled = false;
-
-                if (homeButton1Col != null)
-                {
-                    homeButton1Col.enabled = false;
-                    retryButtonCol.enabled = false;
-                }
-            }
+            //クリア画面が表示されている場合、オプション画面の上からでもRayCastが反応するため、コライダーをオフにすることで防ぐ
+            SetClearSceneCollider(false);
 
             //連打防止
             StartCoroutine(StopContinuousClick(true));
@@ -102,45 +96,32 @@ public class OptionClick : MonoBehaviour
         else if (isOptionAppeared && !isMoving)
         {
             isMoving = true;
+            optionScene.transform.DOMove(new Vector3(0, outOfCamera, 0), moveTime).SetRelative(true).SetEase(Ease.InOutBack);
 
-            //タイトル画面の場合
             if (isTitle)
             {
-                blackBoardRen.DOFade(0, 1f);
+                blackBoardRen.DOFade(0, fadeTime);
                 blackBoardCol.enabled = false;
-                optionScene.transform.DOMove(new Vector3(0, 10, 0), 1f).SetRelative(true).SetEase(Ease.InOutBack);
+                quitGame.transform.DOMove(new Vector3(0, outOfCamera, 0), moveTime).SetRelative(true).SetEase(Ease.InOutBack);
             }
             else if (!isTitle)
             {
-                backTotitle.transform.DOMove(new Vector3(0, 10, 0), 1f).SetRelative(true).SetEase(Ease.InOutBack);
+                backTotitle.transform.DOMove(new Vector3(0, outOfCamera, 0), moveTime).SetRelative(true).SetEase(Ease.InOutBack);
             }
 
-            //ステージの場合
-            if (!isTutorial && !isTitle && gameSta.isGameStarterEnd && !clearMana.isClear)
+            if (isStage && gameSta.isGameStarterEnd && !isClearOrFailed())
             {
-                blackBoardRen.DOFade(0, 1f);
+                blackBoardRen.DOFade(0, fadeTime);
                 blackBoardCol.enabled = false;
             }
-            optionScene.transform.DOMove(new Vector3(0, 10, 0), 1f).SetRelative(true).SetEase(Ease.InOutBack);
 
-            //タイトルの場合
             if (isTutorial && gameSta.isGameStarterEnd)
             {
-                description.DOFade(1, 1f);
-                text.DOFade(1, 1f);
+                description.DOFade(1, fadeTime);
+                text.DOFade(1, fadeTime);
             }
 
-            if (clearMana != null && clearMana.isClear)
-            {
-                homeButtonCol.enabled = true;
-                nextStageButtonCol.enabled = true;
-
-                if (homeButton1Col != null)
-                {
-                    homeButton1Col.enabled = true;
-                    retryButtonCol.enabled = true;
-                }
-            }
+            SetClearSceneCollider(true);
 
             //連打防止
             StartCoroutine(StopContinuousClick(false));
@@ -152,24 +133,60 @@ public class OptionClick : MonoBehaviour
         }
     }
 
+    private bool isClearOrFailed()
+    {
+        if (clearMana.isClear)
+        {
+            return true;
+        }
+
+        if (failedMana != null && failedMana.isStartedShowFailedBoard)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SetClearSceneCollider(bool hasCollider)
+    {
+        if (clearMana != null && clearMana.isClear)
+        {
+            homeButtonCol.enabled = hasCollider;
+
+            if (nextStageButtonCol != null)
+            {
+                nextStageButtonCol.enabled = hasCollider;
+            }
+
+            if (homeButton1Col != null)
+            {
+                homeButton1Col.enabled = hasCollider;
+                retryButtonCol.enabled = hasCollider;
+            }
+        }
+    }
+
     private IEnumerator StopContinuousClick(bool OptionAppearChange)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(moveTime);
         isOptionAppeared = OptionAppearChange;
         isMoving = false;
     }
 
-    public void CheckEnterOption(bool trueOrFalse)
+    public void CheckEnterOption(bool isEnter)
     {
-        isEnterOption = trueOrFalse;
+        isEnterOption = isEnter;
     }
 
-    //タイトル画面の場合、blackBoardが消えたらOptionのレイヤー順を変更する
     private IEnumerator ChangeOptionOrderInlayer()
     {
         yield return new WaitForSeconds(1f);
-        option0Ren.sortingOrder = -6;
-        option0BackgroundRen.sortingOrder = -7;
+
+        //タイトル画面ではNoteが一番前に描画されるようにする
+        int behindNote = -6;
+        option0Ren.sortingOrder = behindNote;
+        option0BackgroundRen.sortingOrder = behindNote - 1;
 
         yield break;
     }

@@ -7,10 +7,11 @@ using DG.Tweening;
 
 public class ObjectScaler : MonoBehaviour
 {
-    private EventTrigger eveTrigger;
     [HideInInspector] public bool isScaleChanging = false;
 
+    private EventTrigger eveTrigger;
     private bool isClicked = false;
+    private float scaleChangeTime = 0.1f;
 
     // Start is called before the first frame update
     void Start()
@@ -18,16 +19,10 @@ public class ObjectScaler : MonoBehaviour
         eveTrigger = GetComponent<EventTrigger>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     //スケーリングに制約がない場合用
     public void ChangeScale(float size)
     {
-        eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
+        eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), scaleChangeTime);
     }
 
     //クリック中はEnterとExitを反応させない場合
@@ -35,7 +30,7 @@ public class ObjectScaler : MonoBehaviour
     {
         if (!isClicked)
         {
-            eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
+            eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), scaleChangeTime);
         }
     }
 
@@ -48,8 +43,8 @@ public class ObjectScaler : MonoBehaviour
     private IEnumerator ChangeScaleSet(float size)
     {
         isClicked = true;
-        eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
-        yield return new WaitForSeconds(0.1f);
+        eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), scaleChangeTime);
+        yield return new WaitForSeconds(scaleChangeTime);
         isClicked = false;
         yield break;
     }
@@ -59,7 +54,7 @@ public class ObjectScaler : MonoBehaviour
     {
         if (!typeChanger.isTypeChanging)
         {
-            eveTrigger.gameObject.transform.DOScale(new Vector2(1.1f, 1.1f), 0.1f);
+            eveTrigger.gameObject.transform.DOScale(new Vector2(1.1f, 1.1f), scaleChangeTime);
         }
     }
 
@@ -67,7 +62,7 @@ public class ObjectScaler : MonoBehaviour
     {
         if (!typeChanger.isTypeChanging)
         {
-            eveTrigger.gameObject.transform.DOScale(new Vector2(1f, 1f), 0.1f);
+            eveTrigger.gameObject.transform.DOScale(new Vector2(1f, 1f), scaleChangeTime);
         }
     }
 
@@ -76,7 +71,7 @@ public class ObjectScaler : MonoBehaviour
     {
         if (!type3Mov.canType3Swap)
         {
-            eveTrigger.gameObject.transform.DOScale(new Vector2(1.1f, 1.1f), 0.1f);
+            eveTrigger.gameObject.transform.DOScale(new Vector2(1.1f, 1.1f), scaleChangeTime);
         }
     }
 
@@ -84,46 +79,72 @@ public class ObjectScaler : MonoBehaviour
     {
         if (!type3Mov.canType3Swap)
         {
-            eveTrigger.gameObject.transform.DOScale(new Vector2(1f, 1f), 0.1f);
+            eveTrigger.gameObject.transform.DOScale(new Vector2(1f, 1f), scaleChangeTime);
         }
     }
 
     //Type変更時のスケーリング
     public IEnumerator ChangeTypeButtonScale(TypeChanger typeChanger, CommonMovement comMov, GameObject[] buttons, GameObject[] pushedButtons, int num)
     {
+        float scaleChangeTime = 0.2f;
+
         if (comMov.puzzleType1)
         {
-            ChangeTypeButtonScaleSet(buttons, pushedButtons, 0);
+            ChangeTypeButtonScaleSet(buttons, pushedButtons, 0, scaleChangeTime);
         }
         else if (comMov.puzzleType2)
         {
-            ChangeTypeButtonScaleSet(buttons, pushedButtons, 1);
+            ChangeTypeButtonScaleSet(buttons, pushedButtons, 1, scaleChangeTime);
         }
         else
         {
-            ChangeTypeButtonScaleSet(buttons, pushedButtons, 2);
+            ChangeTypeButtonScaleSet(buttons, pushedButtons, 2, scaleChangeTime);
         }
 
-        buttons[num].transform.DOScale(new Vector3(0, 0, 0), 0.2f);
-        pushedButtons[num].transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
+        buttons[num].transform.DOScale(new Vector3(0, 0, 0), scaleChangeTime);
+        pushedButtons[num].transform.DOScale(new Vector3(1f, 1f, 1f), scaleChangeTime);
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(scaleChangeTime);
         typeChanger.isTypeChanging = false;
         yield break;
     }
 
-    private void ChangeTypeButtonScaleSet(GameObject[] buttons, GameObject[] pushedButtons, int buttonIndex)
+    private void ChangeTypeButtonScaleSet(GameObject[] buttons, GameObject[] pushedButtons, int buttonIndex, float scaleChangeTime)
     {
-        buttons[buttonIndex].transform.DOScale(new Vector2(1f, 1f), 0.2f);
-        pushedButtons[buttonIndex].transform.DOScale(new Vector2(0, 0), 0.2f);
+        buttons[buttonIndex].transform.DOScale(new Vector2(1f, 1f), scaleChangeTime);
+        pushedButtons[buttonIndex].transform.DOScale(new Vector2(0, 0), scaleChangeTime);
     }
 
+    //player用
     public void ChangePlayerScale(GameObject play, GameObject stop, int playNum, int stopNum)
     {
-        play.transform.DOScale(new Vector2(playNum, playNum), 0.2f);
-        stop.transform.DOScale(new Vector2(stopNum, stopNum), 0.2f);
-        play.GetComponent<SpriteRenderer>().DOFade(playNum, 0.1f);
-        stop.GetComponent<SpriteRenderer>().DOFade(stopNum, 0.1f);
+        float scaleChangeTime = 0.2f;
+        float fadeTime = 0.1f;
+
+        play.transform.DOScale(new Vector2(playNum, playNum), scaleChangeTime);
+        stop.transform.DOScale(new Vector2(stopNum, stopNum), scaleChangeTime);
+        play.GetComponent<SpriteRenderer>().DOFade(playNum, fadeTime);
+        stop.GetComponent<SpriteRenderer>().DOFade(stopNum, fadeTime);
+    }
+
+    public void ChangePlayerButtonScaleForEnter(SoundManager sManager)
+    {
+        float scaleChangeTime = 0.2f;
+
+        if (!sManager.isButtonChanging)
+        {
+            eveTrigger.gameObject.transform.DOScale(new Vector2(1.1f, 1.1f), scaleChangeTime);
+        }
+    }
+
+    public void ChangePlayerButtonScaleForExit(SoundManager sManager)
+    {
+        float scaleChangeTime = 0.2f;
+
+        if (!sManager.isButtonChanging)
+        {
+            eveTrigger.gameObject.transform.DOScale(new Vector2(1f, 1f), scaleChangeTime);
+        }
     }
 
     //PaintTool用
@@ -131,7 +152,7 @@ public class ObjectScaler : MonoBehaviour
     {
         if (!PaintToolMovement.isDraging)
         {
-            eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), 0.1f);
+            eveTrigger.gameObject.transform.DOScale(new Vector2(size, size), scaleChangeTime);
         }
     }
 }

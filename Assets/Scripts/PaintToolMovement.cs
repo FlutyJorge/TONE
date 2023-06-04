@@ -12,15 +12,21 @@ public class PaintToolMovement : MonoBehaviour
     [SerializeField] GameObject[] paintTools;
     [SerializeField] Sprite[] paintedBox;
     [SerializeField] Sprite[] paintedCircle;
-    public bool isCollision = false;
-    [HideInInspector] public static bool isDraging = false;
 
-    private GameObject box;
+    [HideInInspector] public bool isCollision = false;
+    //ObjectScalerの引数が一つしか指定できない関数で使用するため、引数や参照なしでアクセスできるようにする
+    [HideInInspector] public static bool isDraging = false;
+    private GameObject obj; //BoxもしくはCircleが格納される
     private SpriteRenderer spriteRen;
     private Vector3 startPos;
     private bool isDeletedSelector = false;
     private bool isCircle = false;
+    const float moveTime = 0.5f;
+    const float fadeTime = 0.5f;
+    const float scaleChangeTime = 0.1f;
 
+    [Space(10)]
+    [Header("SE")]
     [SerializeField] AudioClip colorChangeSound;
 
     // Start is called before the first frame update
@@ -30,19 +36,12 @@ public class PaintToolMovement : MonoBehaviour
         spriteRen = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void DragPaintTool()
     {
         isDraging = true;
         transform.position = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
 
-        //ドラッグ開始とselector描写開始にずれがあるため、ドラッグ開始と同時に描かれたselectorのサイズを0にする
-
+        //ドラッグ開始とselector描写開始にずれがあるため、ドラッグ開始と同時にわずかに反応するselectorのサイズを0にする
         if (!isDeletedSelector)
         {
             type3Mov.startPos = type3Mov.endPos = Vector2.zero;
@@ -58,11 +57,11 @@ public class PaintToolMovement : MonoBehaviour
 
         if (!isCollision)
         {
-            transform.DOMove(startPos, 0.5f);
+            transform.DOMove(startPos, moveTime);
         }
         else if (isCollision)
         {
-            spriteRen.DOFade(0, 0.5f);
+            spriteRen.DOFade(0, fadeTime);
             StartCoroutine(ResetPosition());
             StartCoroutine(ChangeBoxColor());
         }
@@ -72,15 +71,11 @@ public class PaintToolMovement : MonoBehaviour
     {
         if (collision.CompareTag("PaintToolChecker"))
         {
-            box = collision.transform.parent.gameObject;
-            box.transform.DOScale(new Vector2(1.1f, 1.1f), 0.1f);
-            isCollision = true;
+            ChangeBoxOrCircleScale(collision.transform.parent.gameObject, 1.1f, true);
         }
         else if (collision.CompareTag("PaintToolCheckerForCircle"))
         {
-            box = collision.transform.parent.gameObject;
-            box.transform.DOScale(new Vector2(1.1f, 1.1f), 0.1f);
-            isCollision = true;
+            ChangeBoxOrCircleScale(collision.transform.parent.gameObject, 1.1f, true);
             isCircle = true;
         }
     }
@@ -89,32 +84,34 @@ public class PaintToolMovement : MonoBehaviour
     {
         if (collision.CompareTag("PaintToolChecker"))
         {
-            box = collision.transform.parent.gameObject;
-            box.transform.DOScale(new Vector2(1f, 1f), 0.1f);
-            isCollision = false;
+            ChangeBoxOrCircleScale(collision.transform.parent.gameObject, 1, false);
         }
         else if (collision.CompareTag("PaintToolCheckerForCircle"))
         {
-            box = collision.transform.parent.gameObject;
-            box.transform.DOScale(new Vector2(1f, 1f), 0.1f);
-            isCollision = false;
+            ChangeBoxOrCircleScale(collision.transform.parent.gameObject, 1, false);
             isCircle = false;
         }
     }
 
+    private void ChangeBoxOrCircleScale(GameObject collisionObject, float size, bool judgeCollision)
+    {
+        obj = collisionObject;
+        obj.transform.DOScale(new Vector2(size, size), scaleChangeTime);
+        isCollision = judgeCollision;
+    }
+
     private IEnumerator ResetPosition()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(fadeTime);
         transform.position = startPos;
-        spriteRen.DOFade(1, 0.5f);
+        spriteRen.DOFade(1, fadeTime);
     }
 
     private IEnumerator ChangeBoxColor()
     {
-        //カラー変更時のSE
         seMana.PlayOneShot(colorChangeSound);
 
-        SpriteRenderer boxSpriteRen = box.GetComponent<SpriteRenderer>();
+        SpriteRenderer boxSpriteRen = obj.GetComponent<SpriteRenderer>();
         int spriteIdx = -1;
 
         for (int i = 0; i < paintTools.Length; ++i)
@@ -126,8 +123,8 @@ public class PaintToolMovement : MonoBehaviour
             }
         }
 
-        boxSpriteRen.DOFade(0, 0.5f);
-        yield return new WaitForSeconds(0.5f);
+        boxSpriteRen.DOFade(0, fadeTime);
+        yield return new WaitForSeconds(fadeTime);
 
         if (isCircle)
         {
@@ -138,7 +135,7 @@ public class PaintToolMovement : MonoBehaviour
         {
             boxSpriteRen.sprite = paintedBox[spriteIdx];
         }
-        boxSpriteRen.DOFade(1, 0.5f);
+        boxSpriteRen.DOFade(1, fadeTime);
         yield break;
     }
 }

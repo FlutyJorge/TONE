@@ -119,8 +119,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1.2
   canChangeSound: 1
-  isNote1: 0
   buzzer: {fileID: 0}
+  isNote1: 0
+  note1Prefab: {fileID: 0}
+  differentNote1: []
 --- !u!114 &6019270246865471754
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,12 +18,9 @@ public class Type2Movement : MonoBehaviour
         comMov.type2Change = Type2Change;
     }
 
-    //移動可能Boxのインデックスを取得
     public int GetTargetIndex(GameObject clickedObj)
     {
         int ret = -1;
-
-        //押されたBoxのインデックスを取得
         int idx = comMov.GetBoxIndex(clickedObj);
 
         //エラーチェック
@@ -35,7 +32,7 @@ public class Type2Movement : MonoBehaviour
 
         int nidx = idx -1;
 
-        //nidxが回転できる配列か確認する
+        //仕様上、最上列と左側列はクリックしても反応しないようにする
         int r = idx / comMov.puzzleSize;
         int c = idx % comMov.puzzleSize;
 
@@ -53,18 +50,18 @@ public class Type2Movement : MonoBehaviour
                 return ret;
             }
         }
-        Debug.Log("回転できん！");
+
+        Debug.Log("正しく移動先BoxのIndexが取得されていればこのメッセージは出ない");
         return ret;
     }
 
     private void Type2Change(int idx1, int idx2, GameObject clickedObj)
     {
-        if (comMov.setSwapLimit)
+        if (comMov.hasSwapLimit)
         {
             if (comMov.swapLimit2 == 0)
             {
                 seMana.PlayOneShot(buzzerSound);
-                Debug.Log("回数上限！");
                 return;
             }
             else
@@ -74,10 +71,8 @@ public class Type2Movement : MonoBehaviour
             }
         }
 
-        //スワップ成功時の音を出す
         seMana.PlayOneShot(swapSound);
 
-        //位置変更
         Vector3 tmpPos = clickedObj.transform.position;
         Vector3 parentPos = (tmpPos + comMov.boxes[idx2 - comMov.puzzleSize].transform.position) / 2;
 
@@ -87,12 +82,12 @@ public class Type2Movement : MonoBehaviour
         comMov.boxes[idx2 - comMov.puzzleSize].transform.SetParent(comMov.parent.transform);
         comMov.boxes[idx1 - comMov.puzzleSize].transform.SetParent(comMov.parent.transform);
         comMov.parent.transform.DORotate(new Vector3(0, 0, -90), 1f).SetRelative();
+
         foreach (Transform children in comMov.parent.transform)
         {
             children.transform.DOLocalRotate(new Vector3(0, 0, 90), 1f).SetRelative();
         }
 
-        //配列のデータを更新
         GameObject tmpBox1 = comMov.boxes[idx1];
         GameObject tmpBox2 = comMov.boxes[idx2];
         GameObject tmpBox3 = comMov.boxes[idx2 - comMov.puzzleSize];

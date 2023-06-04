@@ -7,28 +7,29 @@ using DG.Tweening;
 
 public class SoundManager : MonoBehaviour
 {
-    //private AudioSource seAudioSource;
+    //AudioSourceの三種類使い分けで音の重複や、スピーカー不足をカバーする。
     [HideInInspector] public AudioSource songAudioS;
     [HideInInspector] public AudioSource sepaSongAudioS;
     [HideInInspector] public static AudioSource seAudioS;
-    [SerializeField] Slider slider;
-    [SerializeField] float bpm;
-    [SerializeField] float beats;
     [SerializeField] ObjectScaler objScaler;
-
+    [SerializeField] Slider slider;
+    [Header("ステージ曲のBPM")] [SerializeField] float bpm;
+    [Header("ステージ局の拍子")] [SerializeField] float beats;
     [SerializeField] AudioClip seriesOfSong;
 
     private float samplePerBeats;
     private float[] playPoint = new float[17];
+    private float scaleChangeTime = 0.2f;
     private int playPointNum;
+    [HideInInspector] public bool isButtonChanging = false;
+    [HideInInspector] public bool isSongFinished = false;
     private bool isSepaSongPlaying = false;
     private bool isSongPlaying = false;
-    public bool isButtonChanging = false;
 
-    // Start is called before the first frame update
+    //他のスクリプトは、Startによって音量を取得するので、事前にAwakeでコンポーネントを取得する必要がある
     void Awake()
     {
-        //同一コンポーネントをBGM用とSE用で別々に取得
+        //同一コンポーネントを別々に取得するため、配列を使用
         AudioSource[] audioSource = GetComponents<AudioSource>();
         songAudioS = audioSource[0];
         sepaSongAudioS = audioSource[1];
@@ -37,26 +38,23 @@ public class SoundManager : MonoBehaviour
         songAudioS.clip = seriesOfSong;
         sepaSongAudioS.clip = seriesOfSong;
 
-        //三拍子の場合6拍子で曲を分割したい
-
+        //3拍子曲の場合、曲の長さの関係上6拍子で曲を分割する
         if (beats == 3)
         {
             beats = 6;
         }
 
+        //BPMは一分のうちに打つ拍の回数であり、下記の式によって、一拍で実行されるサンプリング数が求められる
         samplePerBeats = 60 / bpm * beats * songAudioS.clip.frequency;
 
         for (int i = 0; i < playPoint.Length; ++i)
         {
             playPoint[i] = samplePerBeats * i;
-            Debug.Log(playPoint[i]);
         }
 
-        //スライダー設定
         slider.maxValue = songAudioS.clip.length * songAudioS.clip.frequency;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isSepaSongPlaying)
@@ -64,10 +62,18 @@ public class SoundManager : MonoBehaviour
             StopSepaSound();
         }
 
+        //アップデートで処理が走る前に曲が終わる場合に備えて、曲終わり一歩手前で判定を行う
+        if (songAudioS.timeSamples > songAudioS.clip.length * songAudioS.clip.frequency -1)
+        {
+            isSongFinished = true;
+            songAudioS.Stop();
+            songAudioS.timeSamples = 0;
+        }
+
         slider.value = songAudioS.timeSamples;
     }
 
-    public IEnumerator PlayAndStopSong(EventTrigger eveTrigger, GameObject play, GameObject stop, GameObject reset)
+    public void PlayAndStopSong(EventTrigger eveTrigger, GameObject play, GameObject stop, GameObject reset)
     {
         if (eveTrigger.gameObject == play)
         {
@@ -76,49 +82,43 @@ public class SoundManager : MonoBehaviour
                 sepaSongAudioS.Stop();
             }
 
-            isSongPlaying = true;
-            isButtonChanging = true;
-            objScaler.ChangePlayerScale(play, stop, 0, 1);
+            StartCoroutine(ChangeFlagAndScale(true, play, stop, 0, 1));
             songAudioS.Play();
-            yield return new WaitForSeconds(0.2f);
-            isButtonChanging = false;
-            yield break;
         }
 
         if (eveTrigger.gameObject == stop)
         {
-            isSongPlaying = false;
-            isButtonChanging = true;
-            objScaler.ChangePlayerScale(play, stop, 1, 0);
+            StartCoroutine(ChangeFlagAndScale(false, play, stop, 1, 0));
             songAudioS.Pause();
-            yield return new WaitForSeconds(0.2f);
-            isButtonChanging = false;
-            yield break;
         }
 
         if (eveTrigger.gameObject == reset)
         {
-            isSongPlaying = false;
-            isButtonChanging = true;
-            objScaler.ChangePlayerScale(play, stop, 1, 0);
+            StartCoroutine(ChangeFlagAndScale(false, play, stop, 1, 0));
             songAudioS.Stop();
             songAudioS.timeSamples = 0;
-            yield return new WaitForSeconds(0.2f);
-            isButtonChanging = false;
-            yield break;
         }
+    }
+
+    public IEnumerator ChangeFlagAndScale(bool isPlaying, GameObject play, GameObject stop, int playScale, int stopScale)
+    {
+        isSongPlaying = isPlaying;
+        isButtonChanging = true;
+        objScaler.ChangePlayerScale(play, stop, playScale, stopScale); //playのscaleを0に、stopのスケールを1に
+        yield return new WaitForSeconds(scaleChangeTime);
+        isButtonChanging = false;
+        yield break;
     }
 
     public void PlayFromPoint(int playPointNum)
     {
-        //songAudioSource.Stop();
+        //timeSamplesはint型なので、playPointもint型に合わせる必要がある
         songAudioS.timeSamples = (int)playPoint[playPointNum];
     }
 
     private int GetSoundButtonNum(GameObject clickedObj)
     {
         int ret = int.Parse(clickedObj.name);
-
         return ret;
     }
 
@@ -127,10 +127,13 @@ public class SoundManager : MonoBehaviour
         if (isSongPlaying)
         {
             songAudioS.Pause();
-            play.transform.DOScale(new Vector2(1, 1), 0.2f);
-            stop.transform.DOScale(new Vector2(0, 0), 0.2f);
-            play.GetComponent<SpriteRenderer>().DOFade(1, 0.1f);
-            stop.GetComponent<SpriteRenderer>().DOFade(0, 0.1f);
+
+            play.transform.DOScale(new Vector2(1, 1), scaleChangeTime);
+            stop.transform.DOScale(new Vector2(0, 0), scaleChangeTime);
+
+            float fadeTime = 0.1f;
+            play.GetComponent<SpriteRenderer>().DOFade(1, fadeTime);
+            stop.GetComponent<SpriteRenderer>().DOFade(0, fadeTime);
             isSongPlaying = false;
         }
 

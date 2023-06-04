@@ -6,11 +6,13 @@ using DG.Tweening;
 
 public class FadeImage : MonoBehaviour
 {
-    private Image img;
     [Header("最初からフェードインが完了しているか")] public bool firstFadeInComp;
+
+    private Image img;
     private bool isFadeInCompleted = false;
     private bool isFadeInStarted = false;
     private int frameCount = 0;
+    private float fadeTime = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +29,7 @@ public class FadeImage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //シーン読み込み時は処理が多く走るため、2フレーム待機してからフェードを行う
         if (frameCount > 2)
         {
             if (isFadeInCompleted)
@@ -45,8 +48,8 @@ public class FadeImage : MonoBehaviour
 
     private IEnumerator UpdateFadeIn()
     {
-        img.DOFade(0, 1);
-        yield return new WaitForSeconds(1f);
+        img.DOFade(0, fadeTime);
+        yield return new WaitForSeconds(fadeTime);
         img.raycastTarget = false;
         isFadeInCompleted = false;
         yield break;
@@ -62,6 +65,6 @@ public class FadeImage : MonoBehaviour
     public void StartFadeOut()
     {
         img.raycastTarget = true;
-        img.DOFade(1, 1);
+        img.DOFade(1, fadeTime);
     }
 }

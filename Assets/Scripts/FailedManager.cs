@@ -6,39 +6,41 @@ using DG.Tweening;
 public class FailedManager : MonoBehaviour
 {
     [SerializeField] CommonMovement comMov;
+    [SerializeField] SoundManager soundMana;
     [SerializeField] SEManager seMana;
     [SerializeField] ClearManager clearMana;
     [SerializeField] GameObject blackBoard;
+
+    [Space(10)]
+    [Header("SE")]
     [SerializeField] AudioClip failedSound;
 
-    private bool isStartedShowFailedBoard = false;
+    [HideInInspector] public bool isStartedShowFailedBoard = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        //スワップができなくなったら処理を行う
-        if (comMov.swapLimit1 == 0 && comMov.swapLimit2 == 0 && comMov.swapLimit3 == 0 && !isStartedShowFailedBoard)
+        if (comMov.swapLimit1 != 0 || comMov.swapLimit2 != 0 || comMov.swapLimit3 != 0)
         {
-            StartCoroutine(ShowFaliedBoard());
-            isStartedShowFailedBoard = true;
+            return;
         }
+
+        if (isStartedShowFailedBoard)
+        {
+            return;
+        }
+
+        StartCoroutine(ShowFaliedBoard());
+        isStartedShowFailedBoard = true;
     }
 
     private IEnumerator ShowFaliedBoard()
     {
-        //スワップアニメーションが終わるまで待機
-        yield return new WaitForSeconds(1f);
+        float fadeTime = 1f;
 
-        //Boxが正しく並べられているか判定
+        soundMana.songAudioS.DOFade(0, fadeTime);
+        yield return new WaitForSeconds(fadeTime);
         clearMana.CheckBoxRow();
 
-        //クリアなら何も処理を行わない
         if (clearMana.isClear)
         {
             yield break;
@@ -47,10 +49,12 @@ public class FailedManager : MonoBehaviour
         SpriteRenderer blackBoardRen = blackBoard.GetComponent<SpriteRenderer>();
         BoxCollider2D blackBoardCol = blackBoard.GetComponent<BoxCollider2D>();
 
+        soundMana.songAudioS.Stop();
         seMana.PlayOneShot(failedSound);
-        blackBoardRen.DOFade(1, 1f);
+        blackBoardRen.DOFade(1, fadeTime);
         blackBoardCol.enabled = true;
 
-        this.gameObject.transform.DOMove(new Vector3(0, -10, 0), 1f).SetRelative(true).SetEase(Ease.InOutBack);
+        int setPosition = -10;
+        this.gameObject.transform.DOMove(new Vector3(0, setPosition, 0), fadeTime).SetRelative(true).SetEase(Ease.InOutBack);
     }
 }

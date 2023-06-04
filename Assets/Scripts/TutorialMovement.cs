@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
+//チュートリアルにおいて、特定のマウス操作がなされたかどうかを判定するクラス
 public class TutorialMovement : MonoBehaviour
 {
     [SerializeField] CommonMovement comMov;
@@ -16,12 +17,6 @@ public class TutorialMovement : MonoBehaviour
     void Start()
     {
         eveTrigger = GetComponent<EventTrigger>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void ClickBoxL()

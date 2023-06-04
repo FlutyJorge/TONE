@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FloatingMovement : MonoBehaviour
 {
+    [Header("浮遊オブジェクトの振れ幅、スピード")]
     public float amplitude;
     public float amplitudeR;
     public float speed;
@@ -14,16 +15,15 @@ public class FloatingMovement : MonoBehaviour
     private float timer = 0;
     private int seedX, seedY, seedR;
 
-    // Start is called before the first frame update
     void Awake()
     {
+        //RandomRangeで指定する値は適当でよい。ただし、seedXとseedYは動きの重複を避けるために別々の値を指定する
         seedX = Random.Range(0, 49);
         seedY = Random.Range(50, 100);
         seedR = Random.Range(0, 100);
         firstPos = trans.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         FloatObject();
@@ -33,6 +33,7 @@ public class FloatingMovement : MonoBehaviour
     {
         timer += Time.deltaTime;
 
+        //PerlinNoiseは0～1の値をとるため、0.5で除算して-0.5～0.5の値をとるようにし、動作の偏りを避ける
         float NoiseValueX = amplitude * (Mathf.PerlinNoise(seedX, timer * speed) - 0.5f);
         float NoiseValueY = amplitude * (Mathf.PerlinNoise(timer * speed, seedY) - 0.5f);
         float NoiseValueR = amplitude * (Mathf.PerlinNoise(timer * speed, seedR) - 0.5f);

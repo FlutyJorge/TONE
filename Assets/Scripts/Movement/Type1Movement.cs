@@ -6,22 +6,17 @@ using DG.Tweening;
 public class Type1Movement : MonoBehaviour
 {
     public CommonMovement comMov;
-    [SerializeField] GameObject parent;
 
     private int[] dirs;
 
-    //初期の移動タイプを設定
     private void Awake()
     {
         comMov.getTargetIndex = GetTargetIndex;
     }
 
-    //移動可能Boxのインデックスを取得
     public int GetTargetIndex(GameObject clickedObj)
     {
         int ret = -1;
-
-        //押されたBoxのインデックスを取得
         int idx = comMov.GetBoxIndex(clickedObj);
 
         //エラーチェック
@@ -41,7 +36,6 @@ public class Type1Movement : MonoBehaviour
 
         for (int i = 0; i < dirs.Length; ++i)
         {
-            //4方向Boxのインデックス
             int nidx = idx + dirs[i];
 
             //配列オーバーチェック
@@ -50,7 +44,6 @@ public class Type1Movement : MonoBehaviour
                 continue;
             }
 
-            //タグによる判別で移動先のインデックスを確定
             GameObject childObj = comMov.boxes[nidx].transform.GetChild(0).gameObject;
 
             if (childObj.tag == "PaintToolCheckerForCircle")
@@ -58,7 +51,6 @@ public class Type1Movement : MonoBehaviour
                 ret = nidx;
             }
         }
-
         return ret;
     }
 }

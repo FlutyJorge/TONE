@@ -5,21 +5,23 @@ using DG.Tweening;
 
 public class Type3Movement : MonoBehaviour
 {
+    [SerializeField] CommonMovement comMov;
     [SerializeField] SEManager seMana;
+    [SerializeField] OptionClick optionClick;
+    [SerializeField] ClearManager clearMana;
+    [SerializeField] FailedManager faildMana;
     public RectTransform selectorImage; //範囲選択時の画像
-    public CommonMovement comMov;
-    public List<GameObject> selectedBoxes = new List<GameObject>(); //選択中のBoxを入れる
-    public bool canType3Swap = false;
-    [HideInInspector] public bool canResetBoxSize = true;
 
     [Space(10)]
     [Header("SE")]
     [SerializeField] AudioClip selectSound;
-
-
+    [HideInInspector] public List<GameObject> selectedBoxes = new List<GameObject>(); //選択中のBoxを入れる
+    [HideInInspector] public bool canType3Swap = false;
+    [HideInInspector] public bool canResetBoxSize = true;
+    [HideInInspector] public Vector2 startPos, endPos;
+    private float scaleChangeTime = 0.2f;
     private Camera cam;
     private Rect selectionRect;
-    [HideInInspector] public Vector2 startPos, endPos;
 
     private void Start()
     {
@@ -33,17 +35,29 @@ public class Type3Movement : MonoBehaviour
         {
             startPos = Input.mousePosition;
             DeactivateAllBoxes();
-
             selectionRect = new Rect();
         }
 
-        if (Input.GetMouseButton(0) && !canType3Swap && comMov.puzzleType3 && !PaintToolMovement.isDraging)
+        if (Input.GetMouseButton(0) && !canType3Swap && comMov.puzzleType3)
         {
+            //オプション画面、クリア画面、Failed画面、PaintToolドラッグ中はセレクターが出てはいけない
+            if (optionClick.isOptionAppeared || PaintToolMovement.isDraging)
+            {
+                return;
+            }
+            else if (clearMana != null && clearMana.isJudging)
+            {
+                return;
+            }
+            else if (faildMana != null && faildMana.isStartedShowFailedBoard)
+            {
+                return;
+            }
+
             endPos = Input.mousePosition;
 
             DrawRectangle();
 
-            //計算X
             if (Input.mousePosition.x < startPos.x)
             {
                 selectionRect.xMin = Input.mousePosition.x;
@@ -55,7 +69,6 @@ public class Type3Movement : MonoBehaviour
                 selectionRect.xMax = Input.mousePosition.x;
             }
 
-            //計算Y
             if (Input.mousePosition.y < startPos.y)
             {
                 selectionRect.yMin = Input.mousePosition.y;
@@ -75,39 +88,29 @@ public class Type3Movement : MonoBehaviour
                 CheckSelectedBox();
                 startPos = endPos = Vector2.zero;
                 DrawRectangle();
-
-                //リストのソート
                 SortSelectedBoxes();
             }
-            else
+            else if (canResetBoxSize)
             {
-                if (canResetBoxSize)
-                {
-                    canType3Swap = false;
-                    DeactivateAllBoxes();
-                }
-                
+                canType3Swap = false;
+                DeactivateAllBoxes();
             }
         }
     }
 
-    //Boxの範囲選択画像の大きさをマウス位置に合わせて変更
     public void DrawRectangle()
     {
-        //画像の中心を計算
         Vector2 boxStart = startPos;
         Vector2 center = (boxStart + endPos) / 2;
 
         selectorImage.position = center;
 
-        //画像のサイズを計算
         float sizeX = Mathf.Abs(boxStart.x - endPos.x);
         float sizeY = Mathf.Abs(boxStart.y - endPos.y);
 
         selectorImage.sizeDelta = new Vector2(sizeX, sizeY);
     }
 
-    //選択されたBoxのスケールを大きくする
     private void CheckSelectedBox()
     {
         foreach (GameObject box in comMov.boxes)
@@ -118,27 +121,24 @@ public class Type3Movement : MonoBehaviour
             }
         }
 
-        //Boxの個数が4以上9以下かつ8以外でないと選択は不可
+        //Boxの個数が4以上9以下かつ8以外でないと選択は不可、縦横一列だけも不可
         if (selectedBoxes.Count < 4 || selectedBoxes.Count > 9 || selectedBoxes.Count == 8 || IsOneRowOneColum())
         {
             selectedBoxes.Clear();
-            Debug.Log("選択不可!");
         }
         else
         {
+            float boxScale = 1.2f;
             foreach (GameObject box in selectedBoxes)
             {
-                box.transform.DOScale(new Vector2(1.2f, 1.2f), 0.2f);
+                box.transform.DOScale(new Vector2(boxScale, boxScale), scaleChangeTime);
             }
 
-            //スワップを可能に
             canType3Swap = true;
-
             seMana.PlayOneShot(selectSound);
         }
     }
 
-    //選択されBox群が縦横一列でないかチェック
     private bool IsOneRowOneColum()
     {
         int idx = -1;
@@ -172,17 +172,17 @@ public class Type3Movement : MonoBehaviour
         return ret;
     }
 
-    //選択されたBoxの初期化
     public void DeactivateAllBoxes()
     {
+        int boxNormalScale = 1;
         foreach (GameObject box in selectedBoxes)
         {
-            box.transform.DOScale(new Vector2(1f, 1f), 0.2f);
+            box.transform.DOScale(new Vector2(boxNormalScale, boxNormalScale), scaleChangeTime);
         }
         selectedBoxes.Clear();
     }
 
-    //選択されたBoxをインデックスでソートする
+    //オブジェクトの名前を比較してソートするため、自身で関数を作ってSortを行う
     private void SortSelectedBoxes()
     {
         List<int> selectedIdx = new List<int>();
@@ -195,12 +195,12 @@ public class Type3Movement : MonoBehaviour
                     selectedIdx.Add(i);
                 }
             }
-
         }
 
         selectedIdx.Sort();
-        selectedBoxes.Clear();
 
+        //Sortするためには一度中身を空にして、再び入れなおす
+        selectedBoxes.Clear();
         foreach (int idx in selectedIdx)
         {
             selectedBoxes.Add(comMov.boxes[idx]);
@@ -216,6 +216,7 @@ public class Type3Movement : MonoBehaviour
 
         switch (selectedBoxes.Count)
         {
+            //選択されるBoxの数は4, 6, 9個に限られるため、条件を網羅できる
             case 4:
                 sidx = GetSIdx(4, clickedObj);
                 break;
@@ -247,7 +248,6 @@ public class Type3Movement : MonoBehaviour
         return ret;
     }
 
-    //selectedBoxesでの移動先インデックスを求める
     private int GetSIdx(int count, GameObject clickedObj)
     {
         int ret = -1;

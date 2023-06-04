@@ -8,7 +8,8 @@ public class VolumeHolder : MonoBehaviour
     public float musicVolume;
     public float SEVolume;
 
-    // Start is called before the first frame update
+    //シングルトンにより、シーン変更が生じた際も音量がこのクラスで保持される
+    //他のスクリプトがStartでこのスクリプトを参照する前にVolumeHolderのインスタンスを確定させる
     void Awake()
     {
         if (instance == null)
@@ -20,11 +21,5 @@ public class VolumeHolder : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -10,10 +10,4 @@ public class TweenCapacitySetter : MonoBehaviour
     {
         DOTween.SetTweensCapacity(tweenersCapacity: 800, sequencesCapacity: 200);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

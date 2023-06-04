@@ -19,18 +19,12 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] NotesManager noteMana;
     [SerializeField] AudioSource audioSForTitle;
 
-    [HideInInspector] public static bool firstPush = false;
+    [HideInInspector] public static bool firstPush = false; //OptionManagerでのシーン移動ボタン連打対策用
+    const int fadeTime = 1;
 
-    // Start is called before the first frame update
     void Start()
     {
         firstPush = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     //タイトルから各ステージに遷移する処理
@@ -42,7 +36,7 @@ public class SceneChanger : MonoBehaviour
             audioSForTitle.PlayOneShot(sceneChangeSound);
             for (int i = 0; i < 3; ++i)
             {
-                noteMana.songAudioS[i].DOFade(0, 1f);
+                noteMana.songAudioS[i].DOFade(0, fadeTime);
             }
 
             StartCoroutine(GoStageScene(stageNum));
@@ -53,7 +47,7 @@ public class SceneChanger : MonoBehaviour
     private IEnumerator GoStageScene(int stageNum)
     {
         //FadeOutが完了するまで待つ
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(fadeTime);
 
         DOTween.Clear(true);
         SceneManager.LoadScene("Stage" + stageNum.ToString());
@@ -66,6 +60,10 @@ public class SceneChanger : MonoBehaviour
         {
             fadeImg.StartFadeOut();
             audioSForTitle.PlayOneShot(sceneChangeSound);
+            for (int i = 0; i < 3; ++i)
+            {
+                noteMana.songAudioS[i].DOFade(0, fadeTime);
+            }
             StartCoroutine(GoTitleOrTutorial("Tutorial"));
             firstPush = true;
         }
@@ -76,21 +74,17 @@ public class SceneChanger : MonoBehaviour
     {
         if (!firstPush)
         {
-            fadeImg.StartFadeOut();
-            SoundManager.seAudioS.PlayOneShot(sceneChangeSound);
-            soundMana.songAudioS.DOFade(0, 1f);
-            SoundManager.seAudioS.DOFade(0, 1f);
-            gameSta.auSource.DOFade(0, 1f);
+            ChangeSceneFromStage();
+            gameSta.auSource.DOFade(0, fadeTime);
             StartCoroutine(GoTitleOrTutorial("Title"));
-            firstPush = true;
         }
     }
 
-    //タイトル、チュートリアル間遷移で使用
+    //タイトル、チュートリアル移動時に使用
     private IEnumerator GoTitleOrTutorial(string scene)
     {
-        //FadeOutが完了するまで待つ
-        yield return new WaitForSeconds(1f);
+        //FadeOut完了まで待機
+        yield return new WaitForSeconds(fadeTime);
 
         DOTween.Clear(true);
         SceneManager.LoadScene(scene);
@@ -101,20 +95,15 @@ public class SceneChanger : MonoBehaviour
     {
         if (!firstPush)
         {
-            fadeImg.StartFadeOut();
-            SoundManager.seAudioS.PlayOneShot(sceneChangeSound);
-            soundMana.songAudioS.DOFade(0, 1f);
-            SoundManager.seAudioS.DOFade(0, 1f);
-            gameSta.auSource.DOFade(0, 1f);
+            ChangeSceneFromStage();
             StartCoroutine(GoRetry());
-            firstPush = true;
         }
     }
 
     private IEnumerator GoRetry()
     {
         //FadeOutが完了するまで待つ
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(fadeTime);
 
         DOTween.Clear(true);
 
@@ -129,12 +118,8 @@ public class SceneChanger : MonoBehaviour
     {
         if (!firstPush)
         {
-            fadeImg.StartFadeOut();
-            SoundManager.seAudioS.PlayOneShot(sceneChangeSound);
-            soundMana.songAudioS.DOFade(0, 1f);
-            SoundManager.seAudioS.DOFade(0, 1f);
+            ChangeSceneFromStage();
             StartCoroutine(GonextScene());
-            firstPush = true;
         }
     }
 
@@ -146,5 +131,36 @@ public class SceneChanger : MonoBehaviour
         DOTween.Clear(true);
         int currentIdx = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentIdx + 1);
+    }
+
+    private void ChangeSceneFromStage()
+    {
+        firstPush = true;
+        fadeImg.StartFadeOut();
+        SoundManager.seAudioS.PlayOneShot(sceneChangeSound);
+        soundMana.songAudioS.DOFade(0, fadeTime);
+        SoundManager.seAudioS.DOFade(0, fadeTime);
+    }
+
+    //ゲーム終了
+    public void QiutGame()
+    {
+        if (!firstPush)
+        {
+            firstPush = true;
+            fadeImg.StartFadeOut();
+            audioSForTitle.PlayOneShot(sceneChangeSound);
+            for (int i = 0; i < 3; ++i)
+            {
+                noteMana.songAudioS[i].DOFade(0, fadeTime);
+            }
+            StartCoroutine(QuitGameCoro());
+        }
+    }
+
+    private IEnumerator QuitGameCoro()
+    {
+        yield return new WaitForSeconds(fadeTime);
+        Application.Quit();
     }
 }

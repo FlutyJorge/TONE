@@ -21,18 +21,16 @@ public class OptionManager : MonoBehaviour
     [SerializeField] NotesManager noteMana;
     public bool isTitle = false;
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        //シーン間でボリュームを引き継ぐ
+        //シーン間でボリュームを引き継ぐ(Awakeで処理してはいけない)
         if (!isTitle)
         {
             soundMana.songAudioS.volume = VolumeHolder.instance.musicVolume;
             gameSta.auSource.volume = VolumeHolder.instance.musicVolume;
             SoundManager.seAudioS.volume = VolumeHolder.instance.SEVolume;
         }
-        else if (isTitle)
+        else
         {
             note0AudioS.volume = VolumeHolder.instance.SEVolume;
             note1AudioS.volume = VolumeHolder.instance.SEVolume;
@@ -45,7 +43,6 @@ public class OptionManager : MonoBehaviour
 
     public void ChangeMusicVolume(float newSliderValue)
     {
-        //シーン遷移中なら処理を無効に
         if (SceneChanger.firstPush)
         {
             return;
@@ -53,13 +50,14 @@ public class OptionManager : MonoBehaviour
 
         if (!isTitle)
         {
+            //Slider設定中にシンメトリーモードのセレクターが反応するのを防ぐ
             type3Mov.selectorImage.sizeDelta = Vector2.zero;
+
             gameSta.auSource.volume = newSliderValue;
             soundMana.songAudioS.volume = newSliderValue;
             soundMana.sepaSongAudioS.volume = newSliderValue;
         }
-
-        if (isTitle)
+        else
         {
             for (int i = 0; i < 3; ++i)
             {
@@ -76,7 +74,6 @@ public class OptionManager : MonoBehaviour
 
     public void ChangeSEVolume(float newSliderValue)
     {
-        //シーン遷移中なら処理を無効に
         if (SceneChanger.firstPush)
         {
             return;
@@ -87,8 +84,7 @@ public class OptionManager : MonoBehaviour
             type3Mov.selectorImage.sizeDelta = Vector2.zero;
             SoundManager.seAudioS.volume = newSliderValue;
         }
-
-        if (isTitle)
+        else
         {
             note0AudioS.volume = newSliderValue;
             note1AudioS.volume = newSliderValue;

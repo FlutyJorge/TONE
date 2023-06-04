@@ -5,38 +5,57 @@ using DG.Tweening;
 
 public class NoteProperty : MonoBehaviour
 {
-    private OptionManager optionMana;
     [SerializeField] float speed;
     [SerializeField] bool canChangeSound;
-    [SerializeField] bool isNote1;
+
+    [Space(10)]
+    [Header("SE")]
     [SerializeField] AudioClip buzzer;
+
+    [Space(10)]
+    [Header("Note1のみアタッチが必要")]
+    [SerializeField] bool isNote1;
+    [SerializeField] GameObject note1Prefab;
+    [SerializeField] Sprite[] differentNote1;
+    private SpriteRenderer note1Renderer;
+
+    private float randomRotate;
+    private OptionManager optionMana;
     private NotesManager notesMana;
     private AudioSource notesAudioS;
     private Vector3 randomPos;
     private Vector3 targetPos;
-    private float randomRotate;
     private SpriteRenderer spriteRen;
 
     // Start is called before the first frame update
     void Start()
     {
+        //NotePropertyはPrefabにアタッチするため、インスタンスが生成された直後に必要なコンポーネントを取得する
         notesMana = GameObject.FindWithTag("NotesManager").GetComponent<NotesManager>();
         notesAudioS = GetComponent<AudioSource>();
         spriteRen = GetComponent<SpriteRenderer>();
         optionMana = GameObject.Find("OptionScene").GetComponent<OptionManager>();
 
+        //ChangeNote1Color(notesMana.playSongNum);
 
-        //回転速度、進行位置を決定
+        //RandomRangeで指定する値は、画面内に収まる座標にしなければNoteが見切れるためこれを避ける
         randomPos = new Vector3(Random.Range(-8, 8), Random.Range(-4, 4), 0);
-        randomRotate = Random.Range(-0.5f, 0.5f);
-        targetPos = randomPos - new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, 0) * 2;
 
-        //Note1であれば処理を行う
+        float rotateRange = 0.5f;
+        randomRotate = Random.Range(-rotateRange, rotateRange);
+
+        //カメラの対角線の距離は18^2 + 10^2の平方根であり、targetPosの大きさをこの数値以上にすることでNoteが画面内で停止することを防ぐ
+        //平方根を計算するMathf.Sqrtは処理が重いため、計算には定数を直接用いる
+        int maxDistance = 21;
+        targetPos = (randomPos - new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, 0)).normalized * maxDistance;
 
         if (!isNote1)
         {
             return;
         }
+
+        note1Renderer = note1Prefab.GetComponent<SpriteRenderer>();
+        ChangeNote1Color(notesMana.playSongNum);
 
         if (notesMana.pushedNoteNum < notesMana.note1AuClips.Length - 1)
         {
@@ -46,11 +65,6 @@ public class NoteProperty : MonoBehaviour
         {
             notesAudioS.clip = notesMana.note1AuClips[0];
         }
-
-        //回転速度、進行位置を決定
-        randomPos = new Vector3(Random.Range(-8, 8), Random.Range(-4, 4), 0);
-        randomRotate = Random.Range(-0.5f, 0.5f);
-        targetPos = randomPos - new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, 0) * 2;
 
         //volumeの設定
         notesAudioS.volume = VolumeHolder.instance.SEVolume;
@@ -66,7 +80,6 @@ public class NoteProperty : MonoBehaviour
 
     public void ClickNote0()
     {
-        canChangeSound = true;
         notesAudioS.PlayOneShot(notesAudioS.clip);
     }
 
@@ -94,30 +107,29 @@ public class NoteProperty : MonoBehaviour
         {
             notesMana.pushedNoteNum = -1;
             ++notesMana.playSongNum;
-        }
 
-        switch (notesMana.playSongNum)
-        {
-            case 0:
-                notesMana.songAudioS[0].DOFade(optionMana.musicVolSider.value, 1);
-                notesMana.isSongPlaying[0] = true;
-                break;
+            switch (notesMana.playSongNum)
+            {
+                case 0: //1レイヤー目が再生
+                    notesMana.songAudioS[0].DOFade(optionMana.musicVolSider.value, 1);
+                    notesMana.isSongPlaying[0] = true;
+                    break;
 
-            case 1:
-                notesMana.songAudioS[1].DOFade(optionMana.musicVolSider.value, 1);
-                notesMana.isSongPlaying[1] = true;
-                break;
+                case 1: //2レイヤー目が再生
+                    notesMana.songAudioS[1].DOFade(optionMana.musicVolSider.value, 1);
+                    notesMana.isSongPlaying[1] = true;
+                    break;
 
-            case 2:
-                notesMana.songAudioS[2].DOFade(optionMana.musicVolSider.value, 1);
-                notesMana.isSongPlaying[2] = true;
+                case 2: //3レイヤー目が再生
+                    notesMana.songAudioS[2].DOFade(optionMana.musicVolSider.value, 1);
+                    notesMana.isSongPlaying[2] = true;
 
-                //曲が完全に再生されたらNote1の生成を中止する
-                notesMana.isplayAllSongs = true;
-                break;
+                    notesMana.isplayAllSongs = true;
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
         yield break;
     }
@@ -139,7 +151,8 @@ public class NoteProperty : MonoBehaviour
 
             if (spriteRen != null)
             {
-                spriteRen.DOFade(0, 0.5f).SetLink(this.gameObject);
+                float fadeTime = 0.3f;
+                spriteRen.DOFade(0, fadeTime).SetLink(this.gameObject);
             }
             
             Invoke("DestroyNote", 1f);
@@ -149,5 +162,13 @@ public class NoteProperty : MonoBehaviour
     private void DestroyNote()
     {
         Destroy(this.gameObject);
+    }
+
+    private void ChangeNote1Color(int playSongNum)
+    {
+        if (isNote1 && playSongNum >= 0)
+        {
+            note1Renderer.sprite = differentNote1[playSongNum];
+        }
     }
 }

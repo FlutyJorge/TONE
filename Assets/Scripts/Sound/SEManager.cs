@@ -7,18 +7,6 @@ public class SEManager : MonoBehaviour
     [Header("タイトルの場合にアタッチが必要")]
     [SerializeField] AudioSource audioSFortitleSE;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //PlayOneShot用
     public void PlayOneShot(AudioClip oneShotAudio)
     {
@@ -26,6 +14,7 @@ public class SEManager : MonoBehaviour
     }
 
     //PaintToolsのEnter用
+    //ドラッグ中、まれにカーソルがペイントツール外にはみ出して音が重複してなるタイミングがあるため防ぐ
     public void PlayOneShotForPaintTools(AudioClip oneShotAudio)
     {
         if (!PaintToolMovement.isDraging)
@@ -35,6 +24,7 @@ public class SEManager : MonoBehaviour
     }
 
     //タイトルSE用
+    //タイトルにはSoundManagerが配置されないため、個別で音を鳴らす関数を用意する
     public void PlayOneShotForTitleSE(AudioClip sound)
     {
         audioSFortitleSE.PlayOneShot(sound);
