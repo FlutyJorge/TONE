@@ -2318,7 +2318,9 @@ MonoBehaviour:
   soundMana: {fileID: 1974836620}
   comMov: {fileID: 76151178}
   seMana: {fileID: 310900675}
-  optinClick: {fileID: 0}
+  optinClick: {fileID: 1428752346}
+  play: {fileID: 813114656}
+  stop: {fileID: 690087562}
   clearBoard: {fileID: 1428752340}
   clearBackground: {fileID: 193710114}
   particles:
@@ -18912,6 +18914,7 @@ MonoBehaviour:
   beats: 4
   seriesOfSong: {fileID: 8300000, guid: 03a8cbab7510d374e9121675bd0a9a0b, type: 3}
   isButtonChanging: 0
+  isSongFinished: 0
 --- !u!82 &1974836621
 AudioSource:
   m_ObjectHideFlags: 0

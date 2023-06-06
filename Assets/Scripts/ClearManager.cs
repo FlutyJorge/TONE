@@ -10,6 +10,8 @@ public class ClearManager : MonoBehaviour
     [SerializeField] CommonMovement comMov;
     [SerializeField] SEManager seMana;
     [SerializeField] OptionClick optinClick;
+    [SerializeField] GameObject play;
+    [SerializeField] GameObject stop;
     public GameObject clearBoard;
     public GameObject clearBackground;
     public ParticleSystem[] particles = new ParticleSystem[8];
@@ -40,6 +42,7 @@ public class ClearManager : MonoBehaviour
     {
         float fadeTime = 0.5f;
         soundMana.songAudioS.DOFade(0, fadeTime);
+        StartCoroutine(PauseSong(fadeTime, false, play, stop, 1, 0));
         seMana.PlayOneShot(clearJudgeSound);
         BoxCollider2D clearBackgroundCol =  clearBackground.GetComponent<BoxCollider2D>();
         clearBackgroundCol.enabled = true;
@@ -87,5 +90,12 @@ public class ClearManager : MonoBehaviour
             }
             isClear = true;
         }
+    }
+
+    private IEnumerator PauseSong(float fadeTime, bool isPlaying, GameObject play, GameObject stop, int playScale, int stopScale)
+    {
+        yield return new WaitForSeconds(fadeTime);
+        StartCoroutine(soundMana.ChangeFlagAndScale(isPlaying, play, stop, playScale, stopScale));
+        soundMana.songAudioS.Pause();
     }
 }

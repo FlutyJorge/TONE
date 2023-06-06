@@ -2319,6 +2319,8 @@ MonoBehaviour:
   comMov: {fileID: 76151178}
   seMana: {fileID: 310900675}
   optinClick: {fileID: 1428752346}
+  play: {fileID: 813114656}
+  stop: {fileID: 690087562}
   clearBoard: {fileID: 1168593942}
   clearBackground: {fileID: 193710114}
   particles:
@@ -11946,6 +11948,7 @@ MonoBehaviour:
   clearMana: {fileID: 310900673}
   homeButtonCol: {fileID: 235753175}
   nextStageButtonCol: {fileID: 1908460626}
+  failedMana: {fileID: 0}
   homeButton1Col: {fileID: 0}
   retryButtonCol: {fileID: 0}
   option0Ren: {fileID: 0}
@@ -18049,6 +18052,7 @@ MonoBehaviour:
   beats: 4
   seriesOfSong: {fileID: 8300000, guid: 49ae5408eb4ce9648b2d53084e153dde, type: 3}
   isButtonChanging: 0
+  isSongFinished: 0
 --- !u!82 &1974836621
 AudioSource:
   m_ObjectHideFlags: 0

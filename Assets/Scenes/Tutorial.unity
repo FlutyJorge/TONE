@@ -1214,7 +1214,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &156425090
@@ -3200,7 +3199,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &414622484
@@ -3692,7 +3690,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &511382652
@@ -4196,7 +4193,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &570681249
@@ -4565,7 +4561,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &612810362
@@ -4760,7 +4755,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &638772237
@@ -6343,6 +6337,7 @@ MonoBehaviour:
   clearMana: {fileID: 0}
   homeButtonCol: {fileID: 0}
   nextStageButtonCol: {fileID: 0}
+  failedMana: {fileID: 0}
   homeButton1Col: {fileID: 0}
   retryButtonCol: {fileID: 0}
   option0Ren: {fileID: 0}
@@ -6877,7 +6872,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &973501273
@@ -7103,7 +7097,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1027432376
@@ -7927,7 +7920,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1061882380
@@ -8296,7 +8288,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1066791932
@@ -8582,7 +8573,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1086084564
@@ -9145,7 +9135,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1147762941
@@ -9647,7 +9636,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!114 &1174639480
@@ -9894,7 +9882,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1186096179
@@ -10263,7 +10250,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1194446323
@@ -11167,7 +11153,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!114 &1339468493
@@ -11982,7 +11967,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1378765093
@@ -12362,7 +12346,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1458921782
@@ -12865,7 +12848,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1498702933
@@ -13161,7 +13143,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1517301405
@@ -13656,7 +13637,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1551515732
@@ -14025,7 +14005,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1585946646
@@ -15436,7 +15415,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1727993893
@@ -15704,7 +15682,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1740389654
@@ -16000,7 +15977,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1804186737
@@ -16369,7 +16345,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1811122389
@@ -16738,7 +16713,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &1823223717
@@ -17006,7 +16980,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1829847488
@@ -17319,7 +17292,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1856599885
@@ -17672,7 +17644,8 @@ GameObject:
   - component: {fileID: 1888118822}
   - component: {fileID: 1888118826}
   - component: {fileID: 1888118825}
-  - component: {fileID: 1888118824}
+  - component: {fileID: 1888118828}
+  - component: {fileID: 1888118827}
   m_Layer: 0
   m_Name: Try
   m_TagString: Untagged
@@ -17747,18 +17720,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1888118824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1888118821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d11aabda76a56e4ebfd7ce53b331352, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1888118825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17776,9 +17737,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1888118824}
-          m_TargetAssemblyTypeName: TryButton, Assembly-CSharp
-          m_MethodName: Coroutine
+        - m_Target: {fileID: 1888118827}
+          m_TargetAssemblyTypeName: ObjectScaler, Assembly-CSharp
+          m_MethodName: ChangeScaleForEnterAndExit
           m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -17788,13 +17749,25 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1888118828}
+          m_TargetAssemblyTypeName: SEManager, Assembly-CSharp
+          m_MethodName: PlayOneShot
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8300000, guid: c85a2d55d8120804fa29e65919dd7932, type: 3}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1888118824}
-          m_TargetAssemblyTypeName: TryButton, Assembly-CSharp
-          m_MethodName: Coroutine
+        - m_Target: {fileID: 1888118827}
+          m_TargetAssemblyTypeName: ObjectScaler, Assembly-CSharp
+          m_MethodName: ChangeScaleForEnterAndExit
           m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -17808,9 +17781,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1888118824}
-          m_TargetAssemblyTypeName: TryButton, Assembly-CSharp
-          m_MethodName: ResetObjectSize
+        - m_Target: {fileID: 1888118827}
+          m_TargetAssemblyTypeName: ObjectScaler, Assembly-CSharp
+          m_MethodName: ChangeScaleForPointerUpAndDown
           m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -17824,26 +17797,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1888118824}
-          m_TargetAssemblyTypeName: TryButton, Assembly-CSharp
-          m_MethodName: ResetObjectSize
+        - m_Target: {fileID: 1888118827}
+          m_TargetAssemblyTypeName: ObjectScaler, Assembly-CSharp
+          m_MethodName: ChangeScaleForPointerUpAndDown
           m_Mode: 4
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 1
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: ClearManager, Assembly-CSharp
-          m_MethodName: ClickTry
-          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -17878,6 +17835,32 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4, y: 1.5}
   m_EdgeRadius: 0
+--- !u!114 &1888118827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888118821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3737c33298b6f53409b183a65e3ff2e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isScaleChanging: 0
+--- !u!114 &1888118828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888118821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc1078ab09cdb03439b512766ce1be79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSFortitleSE: {fileID: 0}
 --- !u!1 &1920198821
 GameObject:
   m_ObjectHideFlags: 0
@@ -17951,6 +17934,7 @@ MonoBehaviour:
   beats: 4
   seriesOfSong: {fileID: 8300000, guid: 3a1e6dd596a13754186ed400c50a8dc6, type: 3}
   isButtonChanging: 0
+  isSongFinished: 0
 --- !u!82 &1974836621
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18356,7 +18340,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 0}
   stop: {fileID: 0}
 --- !u!114 &1983012240
@@ -18746,7 +18729,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &2078217943
@@ -19406,7 +19388,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   comMov: {fileID: 76151178}
   sManager: {fileID: 1974836620}
-  typeChanger: {fileID: 269335068}
   play: {fileID: 813114656}
   stop: {fileID: 690087562}
 --- !u!82 &2144015142

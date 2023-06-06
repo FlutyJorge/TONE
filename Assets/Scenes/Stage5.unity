@@ -2319,6 +2319,8 @@ MonoBehaviour:
   comMov: {fileID: 76151178}
   seMana: {fileID: 310900675}
   optinClick: {fileID: 1428752346}
+  play: {fileID: 813114656}
+  stop: {fileID: 690087562}
   clearBoard: {fileID: 1168593942}
   clearBackground: {fileID: 193710114}
   particles:
